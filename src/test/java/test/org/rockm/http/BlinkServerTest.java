@@ -23,6 +23,7 @@ import static org.junit.Assert.assertThat;
 public class BlinkServerTest {
 
     private static BlinkServer blinkServer;
+    private final HttpClient httpClient = HttpClientBuilder.create().build();
 
     @BeforeClass
     public static void startBlink() throws Exception {
@@ -37,20 +38,24 @@ public class BlinkServerTest {
     @Test
     public void shouldGetAStringResponse() throws Exception {
         blinkServer.get("/hello", (req, res) -> "Hello World");
-        HttpClient httpClient = HttpClientBuilder.create().build();
         HttpResponse response = httpClient.execute(new HttpGet("http://localhost:4567/hello"));
-        String body = new BufferedReader(new InputStreamReader(response.getEntity().getContent())).readLine();
-        assertThat(body, is("Hello World"));
+        assertThat(getBodyFrom(response), is("Hello World"));
+    }
+
+    private String getBodyFrom(HttpResponse response) throws IOException {
+        return new BufferedReader(new InputStreamReader(response.getEntity().getContent())).readLine();
     }
 
     @Test
     public void shouldEchoPostRequest() throws Exception {
         blinkServer.post("/hello", (req, res) -> req.body());
-        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpResponse response = httpClient.execute(createHttpPost());
+        assertThat(getBodyFrom(response), is("Kuku"));
+    }
+
+    private HttpPost createHttpPost() throws UnsupportedEncodingException {
         HttpPost request = new HttpPost("http://localhost:4567/hello");
         request.setEntity(new StringEntity("Kuku"));
-        HttpResponse response = httpClient.execute(request);
-        String body = new BufferedReader(new InputStreamReader(response.getEntity().getContent())).readLine();
-        assertThat(body, is("Kuku"));
+        return request;
     }
 }
