@@ -1,7 +1,8 @@
-package test.org.rockm.http;
+package test.org.rockm.blink;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -9,7 +10,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.rockm.http.BlinkServer;
+import org.rockm.blink.BlinkServer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -57,6 +58,29 @@ public class BlinkServerTest {
         request.setEntity(new StringEntity("Kuku"));
         return request;
     }
+
+    @Test
+    public void shouldGetWithPathParameter() throws Exception {
+        blinkServer.get("/hello", (req, res) -> "Hello " + req.param("name"));
+        HttpResponse response = httpClient.execute(new HttpGet(format("%s/hello?name=Popo", DOMAIN)));
+        assertThat(getBodyFrom(response), is("Hello Popo"));
+    }
+
+    @Test
+    public void shouldDeleteWithPathParameters() throws Exception {
+        KukuDeleteServerStub serverStub = new KukuDeleteServerStub(blinkServer);
+        httpClient.execute(new HttpDelete(format("%s/kukus/542", DOMAIN)));
+        assertThat(serverStub.idToDelete, is("542"));
+    }
+
+    private class KukuDeleteServerStub {
+
+        public String idToDelete;
+
+        public KukuDeleteServerStub(BlinkServer server) throws IOException {
+            server.delete("/kukus/{id}", (req, res) -> idToDelete = req.pathParam("id"));
+        }
+     }
 
     @AfterClass
     public static void stopBlink() throws Exception {

@@ -1,4 +1,4 @@
-package org.rockm.http;
+package org.rockm.blink;
 
 public interface BlinkResponse {
 }
