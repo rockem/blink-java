@@ -1,6 +1,7 @@
 package org.rockm.blink;
 
 import com.sun.net.httpserver.HttpServer;
+import org.rockm.blink.httpserver.MultiMethodHttpHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

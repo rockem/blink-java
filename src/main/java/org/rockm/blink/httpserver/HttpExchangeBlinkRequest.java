@@ -1,6 +1,7 @@
-package org.rockm.blink;
+package org.rockm.blink.httpserver;
 
 import com.sun.net.httpserver.HttpExchange;
+import org.rockm.blink.BlinkRequest;
 
 import java.io.IOException;
 import java.net.URI;

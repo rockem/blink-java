@@ -1,12 +1,11 @@
-package test.org.rockm.blink;
+package test.org.rockm.blink.httpserver;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpPrincipal;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.rockm.blink.HttpExchangeBlinkRequest;
+import org.rockm.blink.httpserver.HttpExchangeBlinkRequest;
 
 import java.io.IOException;
 import java.io.InputStream;
