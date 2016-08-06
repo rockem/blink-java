@@ -1,11 +1,11 @@
 package org.rockm.blink;
 
-import java.net.URI;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Route {
+    private static final String PATH_PARAM_PLACEHOLDERS_REGEX = "\\{([A-Za-z][A-Za-z0-9]*)\\}";
     private final String route;
     private final String routeRegex;
     private final Method method;
@@ -31,7 +31,7 @@ public class Route {
         this.route = path;
         this.handler = handler;
         this.routeRegex = createRegexFor(route);
-        this.paramKeys = extract("\\{([A-Za-z][A-Za-z0-9]*)\\}", route);
+        this.paramKeys = extract(PATH_PARAM_PLACEHOLDERS_REGEX, route);
     }
 
     private String createRegexFor(String route) {
@@ -45,7 +45,7 @@ public class Route {
         return m.find();
     }
 
-    private Map<String, String> getParamsFor(String path) {
+    public Map<String, String> getParamsFor(String path) {
         List<String> values = extract(routeRegex, path);
         Map<String, String> params = new HashMap<>();
         for (int i = 0; i < values.size(); i++) {
@@ -63,37 +63,7 @@ public class Route {
         return values;
     }
 
-    public Object handleRequest(BlinkRequest request, BlinkResponse response) {
-        return handler.handleRequest(new PathParamsBlinkRequest(request, getParamsFor(request.uri().getPath())), response);
-    }
-
-    private class PathParamsBlinkRequest implements BlinkRequest {
-        private final BlinkRequest decoratedRequest;
-        private final Map<String, String> params;
-
-        public PathParamsBlinkRequest(BlinkRequest request, Map<String, String> params) {
-            this.decoratedRequest = request;
-            this.params = params;
-        }
-
-        @Override
-        public String body() {
-            return decoratedRequest.body();
-        }
-
-        @Override
-        public String param(String name) {
-            return decoratedRequest.param(name);
-        }
-
-        @Override
-        public String pathParam(String name) {
-            return params.get(name);
-        }
-
-        @Override
-        public URI uri() {
-            return decoratedRequest.uri();
-        }
+    public RequestHandler getHandler() {
+        return handler;
     }
 }

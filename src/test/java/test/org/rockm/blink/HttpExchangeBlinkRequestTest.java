@@ -30,15 +30,6 @@ public class HttpExchangeBlinkRequestTest {
         assertThat(request.param("name"), is("popo"));
     }
 
-    @Ignore
-    @Test
-    public void shouldRetrievePathParameter() throws Exception {
-        HttpExchangeStub httpExchange = new HttpExchangeStub();
-        httpExchange.requestURI = URI.create("http://domain.com/names/" + ID);
-        HttpExchangeBlinkRequest request = new HttpExchangeBlinkRequest(httpExchange);
-        assertThat(request.pathParam("id"), is(ID));
-    }
-
     private class HttpExchangeStub extends HttpExchange {
         public URI requestURI;
 
