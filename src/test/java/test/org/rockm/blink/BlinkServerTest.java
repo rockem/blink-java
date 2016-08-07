@@ -5,6 +5,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
@@ -81,6 +82,15 @@ public class BlinkServerTest {
             server.delete("/kukus/{id}", (req, res) -> idToDelete = req.pathParam("id"));
         }
      }
+
+    @Test
+    public void shouldEchoPutRequest() throws Exception {
+        blinkServer.put("/hello", (req, res) -> req.body());
+        HttpPut request = new HttpPut(format("%s/hello", DOMAIN));
+        request.setEntity(new StringEntity("Dudu"));
+        HttpResponse response = httpClient.execute(request);
+        assertThat(getBodyFrom(response), is("Dudu"));
+    }
 
     @AfterClass
     public static void stopBlink() throws Exception {
