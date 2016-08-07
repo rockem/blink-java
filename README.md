@@ -1,5 +1,6 @@
 # blink-java
 Simplified http server, made primarily for using in tests
+It also doesn't have any dependencies other than those that come with Oracle's Jdk 
 
 ## Examples
 ```java
