@@ -7,10 +7,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class HttpExchangeBlinkResponse implements BlinkResponse {
-    private String body;
+    private String body = "";
+    private int status = 200;
 
     public void apply(HttpExchange httpExchange) throws IOException {
-        httpExchange.sendResponseHeaders(200, body.length());
+        httpExchange.sendResponseHeaders(status, body.length());
         OutputStream responseBody = httpExchange.getResponseBody();
         responseBody.write(body.getBytes());
         responseBody.close();
@@ -18,5 +19,9 @@ public class HttpExchangeBlinkResponse implements BlinkResponse {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public void status(int statusCode) {
+        this.status = statusCode;
     }
 }
