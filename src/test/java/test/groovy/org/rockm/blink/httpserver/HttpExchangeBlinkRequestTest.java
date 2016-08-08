@@ -1,16 +1,8 @@
-package test.org.rockm.blink.httpserver;
+package test.groovy.org.rockm.blink.httpserver;
 
-import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpContext;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpPrincipal;
 import org.junit.Test;
 import org.rockm.blink.httpserver.HttpExchangeBlinkRequest;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
 import java.net.URI;
 
 import static org.hamcrest.core.Is.is;

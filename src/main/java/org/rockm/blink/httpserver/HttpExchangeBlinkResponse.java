@@ -17,8 +17,8 @@ public class HttpExchangeBlinkResponse implements BlinkResponse {
         responseBody.close();
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setBody(final String body) {
+        this.body = (body == null ? "" : body);
     }
 
     public void status(int statusCode) {

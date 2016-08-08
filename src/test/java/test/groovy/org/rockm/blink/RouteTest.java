@@ -1,4 +1,4 @@
-package test.org.rockm.blink;
+package test.groovy.org.rockm.blink;
 
 import org.junit.Test;
 import org.rockm.blink.Method;

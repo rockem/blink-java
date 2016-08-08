@@ -1,4 +1,4 @@
-package test.org.rockm.blink.httpserver;
+package test.groovy.org.rockm.blink.httpserver;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpContext;

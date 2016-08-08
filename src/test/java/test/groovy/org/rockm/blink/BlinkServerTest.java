@@ -1,4 +1,4 @@
-package test.org.rockm.blink;
+package test.groovy.org.rockm.blink;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -24,8 +24,8 @@ import static org.junit.Assert.assertThat;
 
 public class BlinkServerTest {
 
-    public static final int PORT = 4567;
-    public static final String DOMAIN = "http://localhost:" + PORT;
+    private static final int PORT = 4567;
+    private static final String DOMAIN = "http://localhost:" + PORT;
 
 
     private static BlinkServer blinkServer;
@@ -75,10 +75,9 @@ public class BlinkServerTest {
     }
 
     private class KukuDeleteServerStub {
+        String idToDelete;
 
-        public String idToDelete;
-
-        public KukuDeleteServerStub(BlinkServer server) throws IOException {
+        KukuDeleteServerStub(BlinkServer server) throws IOException {
             server.delete("/kukus/{id}", (req, res) -> idToDelete = req.pathParam("id"));
         }
      }
