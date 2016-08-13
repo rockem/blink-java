@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,12 +38,7 @@ public class HttpExchangeBlinkRequest implements BlinkRequest {
 
     @Override
     public String pathParam(String id) {
-        /*String regexTemplate = templateRoute.replaceAll("\\{[A-Za-z][A-Za-z0-9]*\\}", "([0-9]+)");
-        regexTemplate = regexTemplate.replaceAll("\\/", "\\\\/");
-        List<String> values = extract(regexTemplate, httpExchange.getRequestURI().getPath());
-        List<String> keys = extract("\\{([A-Za-z][A-Za-z0-9]*)\\}", templateRoute);
-        return values.get(keys.indexOf(id));*/
-        throw new UnsupportedOperationException("Path params is unsupported here ");
+        throw new UnsupportedOperationException("Path params are unsupported here ");
     }
 
     @Override
@@ -50,12 +46,17 @@ public class HttpExchangeBlinkRequest implements BlinkRequest {
         return httpExchange.getRequestURI();
     }
 
-    private List<String> extract(String regex, String input) {
-        Matcher v = Pattern.compile(regex).matcher(input);
-        List<String> values = new ArrayList<>();
-        while(v.find()) {
-            values.add(v.group(1));
-        }
-        return values;
+    @Override
+    public String header(String name) {
+        validateHeaderExists(name);
+        return httpExchange.getRequestHeaders().get(name).stream()
+                .reduce((t, u) -> t + "," + u).get();
     }
+
+    private void validateHeaderExists(String name) {
+        if(httpExchange.getRequestHeaders().get(name) == null) {
+            throw new HeaderNotFoundException("Header: [" + name + "] does not exist in request");
+        }
+    }
+
 }

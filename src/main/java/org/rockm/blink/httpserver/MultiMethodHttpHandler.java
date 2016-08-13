@@ -12,7 +12,6 @@ import java.util.*;
 
 public class MultiMethodHttpHandler implements HttpHandler {
 
-    private Map<String, Map<String, RequestHandler>> methodToPath = new HashMap<>();
     private Map<Method, Set<Route>> methodToRoutes = new HashMap<>();
 
     @Override

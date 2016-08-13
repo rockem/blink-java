@@ -4,6 +4,7 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpPrincipal;
+import org.apache.http.HttpHeaders;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,10 +18,11 @@ public class HttpExchangeStub extends HttpExchange {
     public OutputStream responseBody;
     public int statusCode;
     public long bodySize;
+    public Headers requestHeaders = new Headers();
 
     @Override
     public Headers getRequestHeaders() {
-        return null;
+        return requestHeaders;
     }
 
     @Override

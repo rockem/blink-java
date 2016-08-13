@@ -1,6 +1,7 @@
 package test.groovy.org.rockm.blink;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -39,8 +40,12 @@ public class BlinkServerTest {
     @Test
     public void shouldGetAStringResponse() throws Exception {
         blinkServer.get("/hello", (req, res) -> "Hello World");
-        HttpResponse response = httpClient.execute(new HttpGet(format("%s/hello", DOMAIN)));
+        HttpResponse response = httpClient.execute(new HttpGet(fullPath("/hello")));
         assertThat(getBodyFrom(response), is("Hello World"));
+    }
+
+    private String fullPath(String path) {
+        return format("%s" + path, DOMAIN);
     }
 
     private String getBodyFrom(HttpResponse response) throws IOException {
@@ -55,7 +60,7 @@ public class BlinkServerTest {
     }
 
     private HttpPost createHttpPost() throws UnsupportedEncodingException {
-        HttpPost request = new HttpPost(format("%s/hello", DOMAIN));
+        HttpPost request = new HttpPost(fullPath("/hello"));
         request.setEntity(new StringEntity("Kuku"));
         return request;
     }
@@ -63,14 +68,14 @@ public class BlinkServerTest {
     @Test
     public void shouldGetWithPathParameter() throws Exception {
         blinkServer.get("/hello", (req, res) -> "Hello " + req.param("name"));
-        HttpResponse response = httpClient.execute(new HttpGet(format("%s/hello?name=Popo", DOMAIN)));
+        HttpResponse response = httpClient.execute(new HttpGet(fullPath("/hello?name=Popo")));
         assertThat(getBodyFrom(response), is("Hello Popo"));
     }
 
     @Test
     public void shouldDeleteWithPathParameters() throws Exception {
         KukuDeleteServerStub serverStub = new KukuDeleteServerStub(blinkServer);
-        httpClient.execute(new HttpDelete(format("%s/kukus/542", DOMAIN)));
+        httpClient.execute(new HttpDelete(fullPath("/kukus/542")));
         assertThat(serverStub.idToDelete, is("542"));
     }
 
@@ -85,14 +90,22 @@ public class BlinkServerTest {
     @Test
     public void shouldEchoPutRequest() throws Exception {
         blinkServer.put("/hello", (req, res) -> req.body());
-        HttpPut request = new HttpPut(format("%s/hello", DOMAIN));
+        HttpPut request = new HttpPut(fullPath("/hello"));
         request.setEntity(new StringEntity("Dudu"));
         HttpResponse response = httpClient.execute(request);
         assertThat(getBodyFrom(response), is("Dudu"));
+    }
+
+    @Test
+    public void shouldReturnBadRequestWhenFetchingNonExistingHeader() throws Exception {
+        blinkServer.get("/kuku", (req, res) -> req.header("stam"));
+        HttpResponse response = httpClient.execute(new HttpGet(fullPath("/kuku")));
+        assertThat(response.getStatusLine().getStatusCode(), is(HttpStatus.SC_BAD_REQUEST));
     }
 
     @AfterClass
     public static void stopBlink() throws Exception {
         blinkServer.stop();
     }
+
 }

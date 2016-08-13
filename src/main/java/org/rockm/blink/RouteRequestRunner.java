@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Map;
 
 public class RouteRequestRunner {
+    private static final int BAD_REQUEST = 400;
     private final Route route;
 
     public RouteRequestRunner(Route route) {
@@ -11,9 +12,16 @@ public class RouteRequestRunner {
     }
 
     public Object run(BlinkRequest request, BlinkResponse response) {
-        return route.getHandler().handleRequest(
-                new PathParamsBlinkRequest(request, route.getParamsFor(request.uri().getPath())),
-                response);
+        Object responseBody;
+        try {
+            responseBody = route.getHandler().handleRequest(
+                    new PathParamsBlinkRequest(request, route.getParamsFor(request.uri().getPath())),
+                    response);
+        } catch (BlinkRequest.HeaderNotFoundException e) {
+            responseBody = e.getMessage();
+            response.status(BAD_REQUEST);
+        }
+        return responseBody;
     }
 
     private class PathParamsBlinkRequest implements BlinkRequest {
@@ -43,6 +51,11 @@ public class RouteRequestRunner {
         @Override
         public URI uri() {
             return decoratedRequest.uri();
+        }
+
+        @Override
+        public String header(String name) {
+            return decoratedRequest.header(name);
         }
     }
 }

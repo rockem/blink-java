@@ -11,4 +11,13 @@ public interface BlinkRequest {
     String pathParam(String id);
 
     URI uri();
+
+    String header(String name);
+
+    class HeaderNotFoundException extends BlinkException {
+
+        public HeaderNotFoundException(String message) {
+            super(message);
+        }
+    }
 }
