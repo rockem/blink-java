@@ -22,10 +22,10 @@ public class BlinkServer {
     }
 
     public void get(String path, RequestHandler rh) throws IOException {
-        registerRoute(path, "GET", rh);
+        registerRoute(path, Method.GET, rh);
     }
 
-    private void registerRoute(String path, String method, RequestHandler rh) throws IOException {
+    private void registerRoute(String path, Method method, RequestHandler rh) throws IOException {
         startIfNeeded();
         httpHandler.addHandler(path, method, rh);
     }
@@ -44,15 +44,15 @@ public class BlinkServer {
     }
 
     public void post(String path, RequestHandler rh) throws IOException {
-        registerRoute(path, "POST", rh);
+        registerRoute(path, Method.POST, rh);
     }
 
     public void delete(String path, RequestHandler rh) throws IOException {
-        registerRoute(path, "DELETE", rh);
+        registerRoute(path, Method.DELETE, rh);
     }
 
     public void put(String path, RequestHandler rh) throws IOException {
-        registerRoute(path, "PUT", rh);
+        registerRoute(path, Method.PUT, rh);
     }
 
     public void stop() {

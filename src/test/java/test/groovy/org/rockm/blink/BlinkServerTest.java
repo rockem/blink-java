@@ -103,6 +103,13 @@ public class BlinkServerTest {
         assertThat(response.getStatusLine().getStatusCode(), is(HttpStatus.SC_BAD_REQUEST));
     }
 
+    @Test
+    public void shouldReturn404ForBadPath() throws Exception {
+        blinkServer.get("/hello", (req, res) -> "");
+        HttpResponse response = httpClient.execute(new HttpGet(fullPath("/kululu")));
+        assertThat(response.getStatusLine().getStatusCode(), is(HttpStatus.SC_NOT_FOUND));
+    }
+
     @AfterClass
     public static void stopBlink() throws Exception {
         blinkServer.stop();

@@ -2,9 +2,13 @@ package org.rockm.blink;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Optional;
+
+import static java.lang.String.format;
 
 public class RouteRequestRunner {
-    private static final int BAD_REQUEST = 400;
+    public static final String NOT_FOUND_MESSAGE = "%s Not Found";
+
     private final Route route;
 
     public RouteRequestRunner(Route route) {
@@ -14,14 +18,21 @@ public class RouteRequestRunner {
     public Object run(BlinkRequest request, BlinkResponse response) {
         Object responseBody;
         try {
+            String path = request.uri().getPath();
+            validateRoute(path);
             responseBody = route.getHandler().handleRequest(
-                    new PathParamsBlinkRequest(request, route.getParamsFor(request.uri().getPath())),
+                    new PathParamsBlinkRequest(request, route.getParamsFor(path)),
                     response);
-        } catch (BlinkRequest.HeaderNotFoundException e) {
-            responseBody = e.getMessage();
-            response.status(BAD_REQUEST);
+        } catch (Exception e) {
+            responseBody = new ExceptionHandler().handle(e, request, response);
         }
         return responseBody;
+    }
+
+    private void validateRoute(String path) {
+        if(route == null) {
+            throw new RouteNotFoundException(format(NOT_FOUND_MESSAGE, path));
+        }
     }
 
     private class PathParamsBlinkRequest implements BlinkRequest {

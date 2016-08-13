@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import org.junit.Test;
 import org.rockm.blink.BlinkRequest;
 import org.rockm.blink.BlinkResponse;
+import org.rockm.blink.Method;
 import org.rockm.blink.httpserver.MultiMethodHttpHandler;
 import org.rockm.blink.RequestHandler;
 
@@ -17,7 +18,6 @@ import static org.mockito.Mockito.when;
 
 public class MultiMethodHttpHandlerTest {
 
-
     private static final String PATH_WITH_PARAM = "/blinks/{id}";
     private static final String PARAM_ID = "234";
 
@@ -27,7 +27,7 @@ public class MultiMethodHttpHandlerTest {
 
     @Test
     public void shouldRetrievePathParam() throws Exception {
-        handler.addHandler(PATH_WITH_PARAM, "DELETE", requestHandler);
+        handler.addHandler(PATH_WITH_PARAM, Method.DELETE, requestHandler);
         when(httpExchange.getRequestURI()).thenReturn(URI.create("http://domain.com/blinks/" + PARAM_ID));
         when(httpExchange.getRequestMethod()).thenReturn("DELETE");
         when(httpExchange.getResponseBody()).thenReturn(new ByteArrayOutputStream());

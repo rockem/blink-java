@@ -25,15 +25,15 @@ public class MultiMethodHttpHandler implements HttpHandler {
 
     private Route getRouteFor(HttpExchange httpExchange) {
         Set<Route> routes = methodToRoutes.get(Method.valueOf(httpExchange.getRequestMethod()));
-        return routes.stream()
+        Optional<Route> route = routes.stream()
                 .filter(r -> r.isMatchedPath(httpExchange.getRequestURI().getPath()))
-                .findFirst().get();
+                .findFirst();
+        return route.orElse(null);
     }
 
-    public void addHandler(String path, String method, RequestHandler handler) {
-        Method m = Method.valueOf(method);
-        Set<Route> routes = getRoutesFor(m);
-        Route r = new Route(m, path, handler);
+    public void addHandler(String path, Method method, RequestHandler handler) {
+        Set<Route> routes = getRoutesFor(method);
+        Route r = new Route(method, path, handler);
         routes.remove(r);
         routes.add(r);
     }
