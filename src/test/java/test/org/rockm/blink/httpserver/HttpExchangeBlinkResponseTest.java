@@ -1,4 +1,4 @@
-package test.groovy.org.rockm.blink.httpserver;
+package test.org.rockm.blink.httpserver;
 
 import org.junit.Before;
 import org.junit.Test;

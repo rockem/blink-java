@@ -1,4 +1,4 @@
-package test.groovy.org.rockm.blink;
+package test.org.rockm.blink;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;

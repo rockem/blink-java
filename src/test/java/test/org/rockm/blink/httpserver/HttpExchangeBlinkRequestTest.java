@@ -1,8 +1,6 @@
-package test.groovy.org.rockm.blink.httpserver;
+package test.org.rockm.blink.httpserver;
 
-import com.sun.net.httpserver.Headers;
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.rockm.blink.BlinkRequest;
 import org.rockm.blink.httpserver.HttpExchangeBlinkRequest;
 
