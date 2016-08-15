@@ -17,9 +17,9 @@ public class HttpExchangeBlinkResponse implements BlinkResponse {
     private final Map<String, String> headers = new HashMap<>();
 
     public void apply(HttpExchange httpExchange) throws IOException {
+        setResponseHeaders(httpExchange);
         httpExchange.sendResponseHeaders(status, body.length());
         setResponseBody(httpExchange);
-        setResponseHeaders(httpExchange);
     }
 
     private void setResponseBody(HttpExchange httpExchange) throws IOException {
