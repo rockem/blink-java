@@ -19,6 +19,7 @@ public class HttpExchangeStub extends HttpExchange {
     public int statusCode;
     public long bodySize;
     public Headers requestHeaders = new Headers();
+    public Headers responseHeaders;
 
     @Override
     public Headers getRequestHeaders() {
@@ -27,7 +28,7 @@ public class HttpExchangeStub extends HttpExchange {
 
     @Override
     public Headers getResponseHeaders() {
-        return null;
+        return responseHeaders;
     }
 
     @Override

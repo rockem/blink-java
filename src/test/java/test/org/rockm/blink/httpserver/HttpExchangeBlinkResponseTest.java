@@ -1,11 +1,13 @@
 package test.org.rockm.blink.httpserver;
 
+import com.sun.net.httpserver.Headers;
 import org.junit.Before;
 import org.junit.Test;
 import org.rockm.blink.httpserver.HttpExchangeBlinkResponse;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -19,6 +21,7 @@ public class HttpExchangeBlinkResponseTest {
     @Before
     public void setUp() throws Exception {
         httpExchange.responseBody = responseOutputStream;
+        httpExchange.responseHeaders  = new Headers();
     }
 
     @Test
@@ -49,5 +52,14 @@ public class HttpExchangeBlinkResponseTest {
     public void defaultStatusShouldBe200() throws Exception {
         apply();
         assertThat(httpExchange.statusCode, is(200));
+    }
+
+    @Test
+    public void shouldAddHeadersToResponse() throws Exception {
+        blinkResponse.header("content", "kuku");
+        blinkResponse.header("Accept", "popo");
+        apply();
+        assertThat(httpExchange.getResponseHeaders().get("content"), is(Arrays.asList("kuku")));
+        assertThat(httpExchange.getResponseHeaders().get("Accept"), is(Arrays.asList("popo")));
     }
 }
