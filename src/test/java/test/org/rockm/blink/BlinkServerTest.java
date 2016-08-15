@@ -1,7 +1,5 @@
 package test.org.rockm.blink;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
