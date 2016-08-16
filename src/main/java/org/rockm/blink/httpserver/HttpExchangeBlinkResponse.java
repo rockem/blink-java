@@ -6,25 +6,27 @@ import org.rockm.blink.BlinkResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class HttpExchangeBlinkResponse implements BlinkResponse {
-    private String body = "";
+    public static final String CONTENT_TYPE = "Content-Type";
+
+    private Object body = "";
     private int status = 200;
     private final Map<String, String> headers = new HashMap<>();
 
     public void apply(HttpExchange httpExchange) throws IOException {
         setResponseHeaders(httpExchange);
-        httpExchange.sendResponseHeaders(status, body.length());
-        setResponseBody(httpExchange);
+        byte[] bodyAsBytes = body.toString().getBytes();
+        httpExchange.sendResponseHeaders(status, bodyAsBytes.length);
+        setResponseBody(httpExchange, bodyAsBytes);
     }
 
-    private void setResponseBody(HttpExchange httpExchange) throws IOException {
+    private void setResponseBody(HttpExchange httpExchange, byte[] bytes) throws IOException {
         OutputStream responseBody = httpExchange.getResponseBody();
-        responseBody.write(body.getBytes());
+        responseBody.write(bytes);
         responseBody.close();
     }
 
@@ -35,7 +37,7 @@ public class HttpExchangeBlinkResponse implements BlinkResponse {
         });
     }
 
-    public void setBody(final String body) {
+    public void setBody(final Object body) {
         this.body = (body == null ? "" : body);
     }
 
@@ -45,5 +47,10 @@ public class HttpExchangeBlinkResponse implements BlinkResponse {
 
     public void header(String name, String value) {
         headers.put(name, value);
+    }
+
+    @Override
+    public void type(String contentType) {
+        headers.put(CONTENT_TYPE, contentType);
     }
 }

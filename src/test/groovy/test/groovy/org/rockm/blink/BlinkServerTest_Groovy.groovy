@@ -19,9 +19,13 @@ class BlinkServerTest_Groovy {
     @Test
     public void shouldHandleRequestWithNoReturn() throws Exception {
         new BlinkServer(PORT) {{
-            get("/hello", { req, res -> print "do nothing" })
+            get("/hello", { req, res -> noReturnValue() })
         }}
         restClient.get(path: 'hello')
         // passed
+    }
+
+    void noReturnValue() {
+        // do nothing
     }
 }

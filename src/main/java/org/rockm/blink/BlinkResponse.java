@@ -6,4 +6,5 @@ public interface BlinkResponse {
 
     void header(String name, String value);
 
+    void type(String contentType);
 }

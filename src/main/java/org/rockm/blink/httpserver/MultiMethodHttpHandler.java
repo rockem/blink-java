@@ -19,7 +19,7 @@ public class MultiMethodHttpHandler implements HttpHandler {
         Route route = getRouteFor(httpExchange);
         HttpExchangeBlinkResponse response = new HttpExchangeBlinkResponse();
         HttpExchangeBlinkRequest request = new HttpExchangeBlinkRequest(httpExchange);
-        response.setBody((String) new RouteRequestRunner(route).run(request, response));
+        response.setBody(new RouteRequestRunner(route).run(request, response));
         response.apply(httpExchange);
     }
 

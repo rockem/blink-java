@@ -1,8 +1,10 @@
 package test.org.rockm.blink.httpserver;
 
 import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.rockm.blink.BlinkResponse;
 import org.rockm.blink.httpserver.HttpExchangeBlinkResponse;
 
@@ -12,16 +14,21 @@ import java.util.Arrays;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static org.rockm.blink.httpserver.HttpExchangeBlinkResponse.CONTENT_TYPE;
 
 public class HttpExchangeBlinkResponseTest {
 
     private final BlinkResponse blinkResponse = new HttpExchangeBlinkResponse();
-    private final HttpExchangeStub httpExchange = new HttpExchangeStub();
+    private final HttpExchange httpExchange = mock(HttpExchange.class);
     private final ByteArrayOutputStream responseOutputStream = new ByteArrayOutputStream();
+    private final Headers headers = new Headers();
 
     @Before
     public void setUp() throws Exception {
-        httpExchange.responseBody = responseOutputStream;
+        when(httpExchange.getResponseBody()).thenReturn(responseOutputStream);
+        when(httpExchange.getResponseHeaders()).thenReturn(headers);
     }
 
     @Test
@@ -45,13 +52,13 @@ public class HttpExchangeBlinkResponseTest {
     public void shouldSetStatusCode() throws Exception {
         blinkResponse.status(404);
         apply();
-        assertThat(httpExchange.statusCode, is(404));
+        verify(httpExchange).sendResponseHeaders(404, 0);
     }
 
     @Test
     public void defaultStatusShouldBe200() throws Exception {
         apply();
-        assertThat(httpExchange.statusCode, is(200));
+        verify(httpExchange).sendResponseHeaders(200, 0);
     }
 
     @Test
@@ -59,13 +66,14 @@ public class HttpExchangeBlinkResponseTest {
         blinkResponse.header("content", "kuku");
         blinkResponse.header("Accept", "popo");
         apply();
-        assertThat(httpExchange.getResponseHeaders().get("content"), is(Arrays.asList("kuku")));
-        assertThat(httpExchange.getResponseHeaders().get("Accept"), is(Arrays.asList("popo")));
+        assertThat(headers.get("content"), is(Arrays.asList("kuku")));
+        assertThat(headers.get("Accept"), is(Arrays.asList("popo")));
     }
 
     @Test
     public void shouldSetContentTypeHeader() throws Exception {
-
-
+        blinkResponse.type("application/json");
+        apply();
+        assertThat(headers.get(CONTENT_TYPE), is(Arrays.asList("application/json")));
     }
 }
