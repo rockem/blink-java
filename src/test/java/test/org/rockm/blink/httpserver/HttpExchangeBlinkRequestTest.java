@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 public class HttpExchangeBlinkRequestTest {
 
     private final HttpExchangeStub httpExchange = new HttpExchangeStub();
-    private final HttpExchangeBlinkRequest request = new HttpExchangeBlinkRequest(httpExchange);
+    private final BlinkRequest request = new HttpExchangeBlinkRequest(httpExchange);
 
     @Test
     public void shouldRetrieveParamByName() throws Exception {

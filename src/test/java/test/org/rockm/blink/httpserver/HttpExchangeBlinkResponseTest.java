@@ -3,6 +3,7 @@ package test.org.rockm.blink.httpserver;
 import com.sun.net.httpserver.Headers;
 import org.junit.Before;
 import org.junit.Test;
+import org.rockm.blink.BlinkResponse;
 import org.rockm.blink.httpserver.HttpExchangeBlinkResponse;
 
 import java.io.ByteArrayOutputStream;
@@ -14,14 +15,13 @@ import static org.junit.Assert.*;
 
 public class HttpExchangeBlinkResponseTest {
 
-    private final HttpExchangeBlinkResponse blinkResponse = new HttpExchangeBlinkResponse();
+    private final BlinkResponse blinkResponse = new HttpExchangeBlinkResponse();
     private final HttpExchangeStub httpExchange = new HttpExchangeStub();
     private final ByteArrayOutputStream responseOutputStream = new ByteArrayOutputStream();
 
     @Before
     public void setUp() throws Exception {
         httpExchange.responseBody = responseOutputStream;
-        httpExchange.responseHeaders  = new Headers();
     }
 
     @Test
@@ -32,13 +32,13 @@ public class HttpExchangeBlinkResponseTest {
 
     @Test
     public void shouldHandleNullBody() throws Exception {
-        blinkResponse.setBody(null);
+        ((HttpExchangeBlinkResponse)blinkResponse).setBody(null);
         apply();
         assertThat(responseOutputStream.toString("UTF-8"), is(""));
     }
 
     private void apply() throws IOException {
-        blinkResponse.apply(httpExchange);
+        ((HttpExchangeBlinkResponse)blinkResponse).apply(httpExchange);
     }
 
     @Test
@@ -61,5 +61,11 @@ public class HttpExchangeBlinkResponseTest {
         apply();
         assertThat(httpExchange.getResponseHeaders().get("content"), is(Arrays.asList("kuku")));
         assertThat(httpExchange.getResponseHeaders().get("Accept"), is(Arrays.asList("popo")));
+    }
+
+    @Test
+    public void shouldSetContentTypeHeader() throws Exception {
+
+
     }
 }
