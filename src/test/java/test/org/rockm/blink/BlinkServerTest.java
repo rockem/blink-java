@@ -22,7 +22,6 @@ import java.io.UnsupportedEncodingException;
 import static java.lang.String.format;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class BlinkServerTest {
