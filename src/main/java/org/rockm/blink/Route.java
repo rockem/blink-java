@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 
 public class Route {
     private static final String PATH_PARAM_PLACEHOLDERS_REGEX = "\\{([A-Za-z][A-Za-z0-9]*)\\}";
+    private static final String PATH_PARAM_REGEX = "([A-Za-z\\-~\\.\\_0-9]+)";
+    private static final String PATH_PARAM_ID_REGEX = "\\{[A-Za-z][A-Za-z0-9]*\\}";
     private final String route;
     private final String routeRegex;
     private final Method method;
@@ -35,7 +37,7 @@ public class Route {
     }
 
     private String createRegexFor(String route) {
-        String regexPath = route.replaceAll("\\{[A-Za-z][A-Za-z0-9]*\\}", "([0-9]+)");
+        String regexPath = route.replaceAll(PATH_PARAM_ID_REGEX, PATH_PARAM_REGEX);
         return regexPath.replaceAll("/", "\\\\/");
     }
 

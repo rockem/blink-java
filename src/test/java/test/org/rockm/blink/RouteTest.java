@@ -13,6 +13,12 @@ public class RouteTest {
     public void shouldRetrievePathParamValue() throws Exception {
         Route route = new Route(Method.DELETE, "/hello/{id}", null);
         assertThat(route.getParamsFor("/hello/543").get("id"), is("543"));
+    }
 
+    @Test
+    public void shouldAllowMoreCharsInPathParams() throws Exception {
+        Route route = new Route(Method.GET, "/hello/{id}", null);
+        String paramWithAllAllowedChars = "a5-._~Lulu";
+        assertThat(route.getParamsFor("/hello/" + paramWithAllAllowedChars).get("id"), is(paramWithAllAllowedChars));
     }
 }
