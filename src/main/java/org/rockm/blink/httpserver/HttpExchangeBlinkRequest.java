@@ -5,11 +5,6 @@ import org.rockm.blink.BlinkRequest;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class HttpExchangeBlinkRequest implements BlinkRequest {
 
@@ -26,7 +21,7 @@ public class HttpExchangeBlinkRequest implements BlinkRequest {
             targetArray = new byte[httpExchange.getRequestBody().available()];
             httpExchange.getRequestBody().read(targetArray);
         } catch (IOException e) {
-            e.printStackTrace();
+            // Ignore
         }
         return new String(targetArray);
     }

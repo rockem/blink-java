@@ -10,14 +10,14 @@ import java.util.Map;
 
 public class BlinkServer {
 
-    private static final int NUM_OF_SECS_WAIT_FOR_STOP = 2;
+    private static final int NUM_OF_SECS_WAIT_FOR_STOP = 1;
 
     private HttpServer httpServer;
     private final int port;
     private volatile boolean running = false;
     private final MultiMethodHttpHandler httpHandler = new MultiMethodHttpHandler();
 
-    public BlinkServer(int port) throws IOException {
+    public BlinkServer(int port) {
         this.port = port;
     }
 
@@ -60,4 +60,11 @@ public class BlinkServer {
     }
 
 
+    public void reset() {
+        httpHandler.reset();
+    }
+
+    public void contentType(String type) {
+        httpHandler.contentType(type);
+    }
 }

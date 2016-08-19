@@ -18,17 +18,14 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.rockm.blink.httpserver.HttpExchangeBlinkResponse.CONTENT_TYPE;
 
-public class HttpExchangeBlinkResponseTest {
+public class HttpExchangeBlinkResponseTest extends AbstractHttpExchangeBlinkResponseTest {
 
-    private final BlinkResponse blinkResponse = new HttpExchangeBlinkResponse();
-    private final HttpExchange httpExchange = mock(HttpExchange.class);
-    private final ByteArrayOutputStream responseOutputStream = new ByteArrayOutputStream();
-    private final Headers headers = new Headers();
+    private static final String DEFAULT_CONTENT_TYPE = "app/json";
 
     @Before
     public void setUp() throws Exception {
-        when(httpExchange.getResponseBody()).thenReturn(responseOutputStream);
-        when(httpExchange.getResponseHeaders()).thenReturn(headers);
+        super.setUp();
+        blinkResponse = new HttpExchangeBlinkResponse(DEFAULT_CONTENT_TYPE);
     }
 
     @Test
@@ -42,10 +39,6 @@ public class HttpExchangeBlinkResponseTest {
         ((HttpExchangeBlinkResponse)blinkResponse).setBody(null);
         apply();
         assertThat(responseOutputStream.toString("UTF-8"), is(""));
-    }
-
-    private void apply() throws IOException {
-        ((HttpExchangeBlinkResponse)blinkResponse).apply(httpExchange);
     }
 
     @Test
@@ -76,4 +69,11 @@ public class HttpExchangeBlinkResponseTest {
         apply();
         assertThat(headers.get(CONTENT_TYPE), is(Arrays.asList("application/json")));
     }
+
+    @Test
+    public void shouldSetDefaultContentType() throws Exception {
+        apply();
+        assertThat(headers.get(CONTENT_TYPE), is(Arrays.asList(DEFAULT_CONTENT_TYPE)));
+    }
+
 }

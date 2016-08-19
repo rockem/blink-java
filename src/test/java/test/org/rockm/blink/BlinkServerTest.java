@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.rockm.blink.BlinkServer;
@@ -22,12 +23,13 @@ import java.io.UnsupportedEncodingException;
 import static java.lang.String.format;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static test.org.rockm.blink.HttpUtil.DOMAIN;
+import static test.org.rockm.blink.HttpUtil.PORT;
+import static test.org.rockm.blink.HttpUtil.fullPath;
 
 public class BlinkServerTest {
-
-    private static final int PORT = 4567;
-    private static final String DOMAIN = "http://localhost:" + PORT;
 
 
     private static BlinkServer blinkServer;
@@ -38,15 +40,16 @@ public class BlinkServerTest {
         blinkServer = new BlinkServer(PORT);
     }
 
+    @Before
+    public void setUp() throws Exception {
+        blinkServer.reset();
+    }
+
     @Test
     public void shouldGetAStringResponse() throws Exception {
         blinkServer.get("/hello", (req, res) -> "Hello World");
         HttpResponse response = httpClient.execute(new HttpGet(fullPath("/hello")));
         assertThat(getBodyFrom(response), is("Hello World"));
-    }
-
-    private String fullPath(String path) {
-        return format("%s" + path, DOMAIN);
     }
 
     private String getBodyFrom(HttpResponse response) throws IOException {
@@ -119,6 +122,32 @@ public class BlinkServerTest {
         HttpGet httpGet = new HttpGet(fullPath("/hello"));
         HttpResponse response = httpClient.execute(httpGet);
         assertThat(response.getFirstHeader("Content-type").getValue(), equalTo("application/json"));
+    }
+
+    @Test
+    public void shouldResetRouting() throws Exception {
+        blinkServer.get("/hello", (req, res) -> "Hello World");
+        blinkServer.reset();
+        HttpResponse response = httpClient.execute(new HttpGet(fullPath("/hello")));
+        assertThat(response.getStatusLine().getStatusCode(), is(HttpStatus.SC_NOT_FOUND));
+    }
+
+    @Test
+    public void shouldSetDefaultContentType() throws Exception {
+        blinkServer.contentType("application/json");
+        blinkServer.get("/json", (req, res) -> "HelloWorld");
+        HttpResponse response = httpClient.execute(new HttpGet(fullPath("/json")));
+        assertThat(response.getFirstHeader("Content-Type").getValue(), is("application/json"));
+    }
+
+    @Test
+    public void shouldResetContentType() throws Exception {
+        blinkServer.contentType("application/json");
+        blinkServer.reset();
+        blinkServer.get("/json", (req, res) -> "HelloWorld");
+        HttpResponse response = httpClient.execute(new HttpGet(fullPath("/json")));
+        assertNull(response.getFirstHeader("Content-Type"));
+
     }
 
     @AfterClass

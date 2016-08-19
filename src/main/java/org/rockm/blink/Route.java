@@ -66,4 +66,8 @@ public class Route {
     public RequestHandler getHandler() {
         return handler;
     }
+
+    public Method getMethod() {
+        return method;
+    }
 }

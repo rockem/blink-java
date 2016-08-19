@@ -1,6 +1,7 @@
 package test.org.rockm.blink.httpserver;
 
 import com.sun.net.httpserver.HttpExchange;
+import org.junit.Before;
 import org.junit.Test;
 import org.rockm.blink.BlinkRequest;
 import org.rockm.blink.BlinkResponse;
@@ -13,7 +14,10 @@ import java.net.URI;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class MultiMethodHttpHandlerTest {
@@ -25,12 +29,16 @@ public class MultiMethodHttpHandlerTest {
     private final MultiMethodHttpHandler handler = new MultiMethodHttpHandler();
     private final StubRequestHandler requestHandler = new StubRequestHandler();
 
+    @Before
+    public void setUp() throws Exception {
+        when(httpExchange.getResponseBody()).thenReturn(new ByteArrayOutputStream());
+    }
+
     @Test
     public void shouldRetrievePathParam() throws Exception {
         handler.addHandler(PATH_WITH_PARAM, Method.DELETE, requestHandler);
         when(httpExchange.getRequestURI()).thenReturn(URI.create("http://domain.com/blinks/" + PARAM_ID));
         when(httpExchange.getRequestMethod()).thenReturn("DELETE");
-        when(httpExchange.getResponseBody()).thenReturn(new ByteArrayOutputStream());
         handler.handle(httpExchange);
         assertThat(requestHandler.receivedParam, is(PARAM_ID));
 
@@ -45,4 +53,5 @@ public class MultiMethodHttpHandlerTest {
             return "";
         }
     }
+
 }

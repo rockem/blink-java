@@ -15,7 +15,12 @@ public class HttpExchangeBlinkResponse implements BlinkResponse {
 
     private Object body = "";
     private int status = 200;
+    private final String defaultContentType;
     private final Map<String, String> headers = new HashMap<>();
+
+    public HttpExchangeBlinkResponse(String defaultContentType) {
+        this.defaultContentType = defaultContentType;
+    }
 
     public void apply(HttpExchange httpExchange) throws IOException {
         setResponseHeaders(httpExchange);
@@ -32,9 +37,16 @@ public class HttpExchangeBlinkResponse implements BlinkResponse {
 
     private void setResponseHeaders(HttpExchange httpExchange) throws IOException {
         Headers httpHeaders = httpExchange.getResponseHeaders();
+        setDefaultContentType(httpHeaders);
         headers.entrySet().forEach((e) -> {
             httpHeaders.put(e.getKey(), Collections.singletonList(e.getValue()));
         });
+    }
+
+    private void setDefaultContentType(Headers httpHeaders) {
+        if(defaultContentType != null) {
+            httpHeaders.put(CONTENT_TYPE, Collections.singletonList(defaultContentType));
+        }
     }
 
     public void setBody(final Object body) {
