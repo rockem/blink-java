@@ -9,6 +9,7 @@ import org.rockm.blink.Method;
 import org.rockm.blink.httpserver.MultiMethodHttpHandler;
 import org.rockm.blink.RequestHandler;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 
@@ -32,6 +33,7 @@ public class MultiMethodHttpHandlerTest {
     @Before
     public void setUp() throws Exception {
         when(httpExchange.getResponseBody()).thenReturn(new ByteArrayOutputStream());
+        when(httpExchange.getRequestBody()).thenReturn(new ByteArrayInputStream("".getBytes()));
     }
 
     @Test

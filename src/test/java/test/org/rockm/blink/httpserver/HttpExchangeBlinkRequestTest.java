@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.rockm.blink.BlinkRequest;
 import org.rockm.blink.httpserver.HttpExchangeBlinkRequest;
 
+import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.util.Arrays;
 
@@ -17,14 +18,17 @@ import static org.mockito.Mockito.when;
 
 public class HttpExchangeBlinkRequestTest {
 
+    private static final String BODY = "kuku kuku";
     private final HttpExchange httpExchange = mock(HttpExchange.class);
-    private final BlinkRequest request = new HttpExchangeBlinkRequest(httpExchange);
+    private BlinkRequest request;
 
     private final Headers headers = new Headers();
 
     @Before
     public void setUp() throws Exception {
         when(httpExchange.getRequestHeaders()).thenReturn(headers);
+        when(httpExchange.getRequestBody()).thenReturn(new ByteArrayInputStream(BODY.getBytes()));
+        request = new HttpExchangeBlinkRequest(httpExchange);
     }
 
     @Test
@@ -48,5 +52,12 @@ public class HttpExchangeBlinkRequestTest {
     @Test(expected = BlinkRequest.HeaderNotFoundException.class)
     public void shouldFailWhenReadNonExistingHeader() throws Exception {
         assertNull(request.header("lala"));
+    }
+
+    @Test
+    public void shouldBeAbleToReadBodyMoreThanOnce() throws Exception {
+        assertThat(request.body(), is(BODY));
+        assertThat(request.body(), is(BODY));
+
     }
 }
