@@ -12,7 +12,7 @@ import java.net.URI;
 public class HttpExchangeBlinkRequest implements BlinkRequest {
 
     private static final int BUFFER_SIZE = 16384;
-    
+
     private final HttpExchange httpExchange;
     private final String body;
 
