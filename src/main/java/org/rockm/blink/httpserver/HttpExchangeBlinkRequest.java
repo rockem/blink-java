@@ -14,10 +14,10 @@ public class HttpExchangeBlinkRequest implements BlinkRequest {
 
     public HttpExchangeBlinkRequest(HttpExchange httpExchange) {
         this.httpExchange = httpExchange;
-        body = getAsStringFrom(httpExchange.getRequestBody());
+        body = getAsString(httpExchange.getRequestBody());
     }
 
-    private String getAsStringFrom(InputStream is) {
+    private String getAsString(InputStream is) {
         byte[] targetArray = new byte[0];
         try {
             targetArray = new byte[is.available()];

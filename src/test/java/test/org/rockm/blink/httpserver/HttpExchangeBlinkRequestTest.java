@@ -32,12 +32,6 @@ public class HttpExchangeBlinkRequestTest {
     }
 
     @Test
-    public void shouldRetrieveParamByName() throws Exception {
-        when(httpExchange.getRequestURI()).thenReturn(URI.create("http://domain.com?name=popo"));
-        assertThat(request.param("name"), is("popo"));
-    }
-
-    @Test
     public void shouldRetrieveHeaderByName() throws Exception {
         headers.put("key", Arrays.asList("kuku"));
         assertThat(request.header("key"), is("kuku"));
@@ -58,6 +52,12 @@ public class HttpExchangeBlinkRequestTest {
     public void shouldBeAbleToReadBodyMoreThanOnce() throws Exception {
         assertThat(request.body(), is(BODY));
         assertThat(request.body(), is(BODY));
+    }
 
+    @Test
+    public void shouldRetrieveQueryParamsByName() throws Exception {
+        when(httpExchange.getRequestURI()).thenReturn(URI.create("http://domain.com?name=popo&type=cool"));
+        assertThat(request.param("name"), is("popo"));
+        assertThat(request.param("type"), is("cool"));
     }
 }
