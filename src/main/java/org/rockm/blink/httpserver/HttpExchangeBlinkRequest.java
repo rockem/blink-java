@@ -3,11 +3,14 @@ package org.rockm.blink.httpserver;
 import com.sun.net.httpserver.HttpExchange;
 import org.rockm.blink.BlinkRequest;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
 public class HttpExchangeBlinkRequest implements BlinkRequest {
+
+    private static final int BUFFER_SIZE = 16384;
 
     private final HttpExchange httpExchange;
     private final String body;
@@ -17,15 +20,22 @@ public class HttpExchangeBlinkRequest implements BlinkRequest {
         body = getAsString(httpExchange.getRequestBody());
     }
 
-    private String getAsString(InputStream is) {
-        byte[] targetArray = new byte[0];
+    private String getAsString(InputStream requestBody) {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+        int nRead;
+        byte[] data = new byte[BUFFER_SIZE];
+
         try {
-            targetArray = new byte[is.available()];
-            httpExchange.getRequestBody().read(targetArray);
+            while ((nRead = requestBody.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+            buffer.flush();
+            return buffer.toString("UTF-8");
         } catch (IOException e) {
-            // Ignore
+            e.printStackTrace();
         }
-        return new String(targetArray);
+        return "";
     }
 
     @Override

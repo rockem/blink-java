@@ -7,8 +7,10 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicHeader;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -67,6 +69,16 @@ public class BlinkServerTest {
         HttpPost request = new HttpPost(fullPath("/hello"));
         request.setEntity(new StringEntity("Kuku"));
         return request;
+    }
+
+    @Test
+    public void shouldEchoPostRequest2() throws Exception {
+        blinkServer.post("/hello", (req, res) -> req.body());
+        HttpPost request = new HttpPost(fullPath("/hello"));
+        request.addHeader(new BasicHeader("Content-Type", "application/json"));
+        request.setEntity(new ByteArrayEntity("{\"p\":\"kuku\"}".getBytes()));
+        HttpResponse response = httpClient.execute(request);
+        assertThat(getBodyFrom(response), is("{\"p\":\"kuku\"}"));
     }
 
     @Test

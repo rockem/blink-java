@@ -5,8 +5,6 @@ import org.rockm.blink.httpserver.MultiMethodHttpHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BlinkServer {
 
