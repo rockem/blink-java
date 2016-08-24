@@ -7,35 +7,37 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class HttpExchangeBlinkRequest implements BlinkRequest {
 
-    private static final int BUFFER_SIZE = 16384;
-
     private final HttpExchange httpExchange;
     private final String body;
+    private final Map<String, String> queryParams;
 
     public HttpExchangeBlinkRequest(HttpExchange httpExchange) {
         this.httpExchange = httpExchange;
         body = getAsString(httpExchange.getRequestBody());
+        queryParams = setQueryParams();
     }
 
     private String getAsString(InputStream requestBody) {
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        return new InputStreamReader(requestBody).toString();
+    }
 
-        int nRead;
-        byte[] data = new byte[BUFFER_SIZE];
+    private Map<String, String> setQueryParams() {
+        return Arrays.stream(allQueryParams()).collect(Collectors.toMap(
+           p -> p.split("=")[0], p -> p.split("=")[1]
+        ));
+    }
 
-        try {
-            while ((nRead = requestBody.read(data, 0, data.length)) != -1) {
-                buffer.write(data, 0, nRead);
-            }
-            buffer.flush();
-            return buffer.toString("UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
+    private String[] allQueryParams() {
+        if(httpExchange.getRequestURI().getQuery() == null) {
+            return new String[0];
         }
-        return "";
+        return httpExchange.getRequestURI().getQuery().split("&");
     }
 
     @Override
@@ -45,12 +47,12 @@ public class HttpExchangeBlinkRequest implements BlinkRequest {
 
     @Override
     public String param(String name) {
-        return httpExchange.getRequestURI().getQuery().split("=")[1];
+        return queryParams.get(name);
     }
 
     @Override
     public String pathParam(String id) {
-        throw new UnsupportedOperationException("Path params are unsupported here ");
+        throw new UnsupportedOperationException("Path queryParams are unsupported here ");
     }
 
     @Override
@@ -71,4 +73,31 @@ public class HttpExchangeBlinkRequest implements BlinkRequest {
         }
     }
 
+    private class InputStreamReader {
+        private static final int BUFFER_SIZE = 16384;
+
+        private InputStream requestBody;
+
+        public InputStreamReader(InputStream requestBody) {
+            this.requestBody = requestBody;
+        }
+
+        public String toString() {
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+            int nRead;
+            byte[] data = new byte[BUFFER_SIZE];
+
+            try {
+                while ((nRead = requestBody.read(data, 0, data.length)) != -1) {
+                    buffer.write(data, 0, nRead);
+                }
+                buffer.flush();
+                return buffer.toString("UTF-8");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return "";
+        }
+    }
 }

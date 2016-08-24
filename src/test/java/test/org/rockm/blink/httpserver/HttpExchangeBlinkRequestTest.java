@@ -20,36 +20,39 @@ public class HttpExchangeBlinkRequestTest {
 
     private static final String BODY = "kuku kuku";
     private final HttpExchange httpExchange = mock(HttpExchange.class);
-    private BlinkRequest request;
-
     private final Headers headers = new Headers();
 
     @Before
     public void setUp() throws Exception {
         when(httpExchange.getRequestHeaders()).thenReturn(headers);
         when(httpExchange.getRequestBody()).thenReturn(new ByteArrayInputStream(BODY.getBytes()));
-        request = new HttpExchangeBlinkRequest(httpExchange);
+        when(httpExchange.getRequestURI()).thenReturn(URI.create("http://domain.com"));
     }
 
     @Test
     public void shouldRetrieveHeaderByName() throws Exception {
         headers.put("key", Arrays.asList("kuku"));
-        assertThat(request.header("key"), is("kuku"));
+        assertThat(request().header("key"), is("kuku"));
+    }
+
+    private HttpExchangeBlinkRequest request() {
+        return new HttpExchangeBlinkRequest(httpExchange);
     }
 
     @Test
     public void shouldRetrieveMultipleValuesHeaderByName() throws Exception {
         headers.put("key", Arrays.asList("kuku1", "kuku2"));
-        assertThat(request.header("key"), is("kuku1,kuku2"));
+        assertThat(request().header("key"), is("kuku1,kuku2"));
     }
 
     @Test(expected = BlinkRequest.HeaderNotFoundException.class)
     public void shouldFailWhenReadNonExistingHeader() throws Exception {
-        assertNull(request.header("lala"));
+        assertNull(request().header("lala"));
     }
 
     @Test
     public void shouldBeAbleToReadBodyMoreThanOnce() throws Exception {
+        HttpExchangeBlinkRequest request = request();
         assertThat(request.body(), is(BODY));
         assertThat(request.body(), is(BODY));
     }
@@ -57,6 +60,7 @@ public class HttpExchangeBlinkRequestTest {
     @Test
     public void shouldRetrieveQueryParamsByName() throws Exception {
         when(httpExchange.getRequestURI()).thenReturn(URI.create("http://domain.com?name=popo&type=cool"));
+        HttpExchangeBlinkRequest request = request();
         assertThat(request.param("name"), is("popo"));
         assertThat(request.param("type"), is("cool"));
     }
