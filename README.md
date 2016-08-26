@@ -2,7 +2,7 @@
 Simplified http server, made primarily for using in tests
 It also doesn't have any dependencies other than those that come with Oracle's Jdk 
 
-# Artifactory 
+## Artifactory 
 The package is available at https://bintray.com/rockem/maven/blink-java
 
 ## Examples
