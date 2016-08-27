@@ -6,6 +6,7 @@ It also doesn't have any dependencies other than those that come with Oracle's J
 The package is available at https://bintray.com/rockem/maven/blink-java
 
 ## Examples
+### Java
 ```java
 new BlinkServer(1234) {{
 	get("/hello", (req, res) -> "Hello World");
@@ -15,5 +16,11 @@ new BlinkServer(1234) {{
 new BlinkServer(1234) {{
 	delete("/hello/{id}", (req, res) -> "Delete " + req.pathParam("id"));
 }};
+```
+### Groovy
+```groovy
+new BlinkServer(PORT) {{
+	get("/hello", { req, res -> "Hello World" })
+}}
 ```
 </code>
