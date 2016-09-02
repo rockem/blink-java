@@ -1,8 +1,10 @@
 package test.org.rockm.blink.httpserver;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.rockm.blink.BlinkRequest;
 import org.rockm.blink.httpserver.HttpExchangeBlinkRequest;
@@ -64,4 +66,5 @@ public class HttpExchangeBlinkRequestTest {
         assertThat(request.param("name"), is("popo"));
         assertThat(request.param("type"), is("cool"));
     }
+
 }

@@ -1,5 +1,8 @@
 package test.org.rockm.blink;
 
+import com.google.gson.Gson;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -17,19 +20,20 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.rockm.blink.BlinkServer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static java.lang.String.format;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static test.org.rockm.blink.HttpUtil.DOMAIN;
 import static test.org.rockm.blink.HttpUtil.PORT;
 import static test.org.rockm.blink.HttpUtil.fullPath;
+import static test.org.rockm.blink.util.FileUtil.fileInBytes;
 
 public class BlinkServerTest {
 
@@ -61,13 +65,13 @@ public class BlinkServerTest {
     @Test
     public void shouldEchoPostRequest() throws Exception {
         blinkServer.post("/hello", (req, res) -> req.body());
-        HttpResponse response = httpClient.execute(createHttpPost());
+        HttpResponse response = httpClient.execute(createHttpPost("/hello", new StringEntity("Kuku")));
         assertThat(getBodyFrom(response), is("Kuku"));
     }
 
-    private HttpPost createHttpPost() throws UnsupportedEncodingException {
-        HttpPost request = new HttpPost(fullPath("/hello"));
-        request.setEntity(new StringEntity("Kuku"));
+    private HttpPost createHttpPost(String path, HttpEntity entity) throws UnsupportedEncodingException {
+        HttpPost request = new HttpPost(fullPath(path));
+        request.setEntity(entity);
         return request;
     }
 
@@ -101,7 +105,7 @@ public class BlinkServerTest {
         KukuDeleteServerStub(BlinkServer server) throws IOException {
             server.delete("/kukus/{id}", (req, res) -> idToDelete = req.pathParam("id"));
         }
-     }
+    }
 
     @Test
     public void shouldEchoPutRequest() throws Exception {
@@ -129,7 +133,8 @@ public class BlinkServerTest {
     @Test
     public void shouldRetrieveResponseHeader() throws Exception {
         blinkServer.get("/hello", (req, res) -> {
-            res.header("Content-Type", "application/json"); return "";
+            res.header("Content-Type", "application/json");
+            return "";
         });
         HttpGet httpGet = new HttpGet(fullPath("/hello"));
         HttpResponse response = httpClient.execute(httpGet);
@@ -159,7 +164,15 @@ public class BlinkServerTest {
         blinkServer.get("/json", (req, res) -> "HelloWorld");
         HttpResponse response = httpClient.execute(new HttpGet(fullPath("/json")));
         assertNull(response.getFirstHeader("Content-Type"));
+    }
 
+    @Test
+    public void shouldRetrieveImage() throws Exception {
+        byte[] imageInBytes = fileInBytes("blink-img.jpg");
+        blinkServer.contentType("image/jpg");
+        blinkServer.get("/img", (req, res) -> imageInBytes);
+        HttpResponse response = httpClient.execute(new HttpGet(fullPath("/img")));
+        assertThat(IOUtils.toByteArray(response.getEntity().getContent()), is(imageInBytes));
     }
 
     @AfterClass

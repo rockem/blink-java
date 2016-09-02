@@ -2,9 +2,8 @@ package org.rockm.blink.httpserver;
 
 import com.sun.net.httpserver.HttpExchange;
 import org.rockm.blink.BlinkRequest;
+import org.rockm.blink.io.InputStreamReader;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
@@ -20,14 +19,14 @@ public class HttpExchangeBlinkRequest implements BlinkRequest {
     public HttpExchangeBlinkRequest(HttpExchange httpExchange) {
         this.httpExchange = httpExchange;
         body = getAsString(httpExchange.getRequestBody());
-        queryParams = setQueryParams();
+        queryParams = getQueryParams();
     }
 
     private String getAsString(InputStream requestBody) {
-        return new InputStreamReader(requestBody).toString();
+        return new InputStreamReader(requestBody).readAsString();
     }
 
-    private Map<String, String> setQueryParams() {
+    private Map<String, String> getQueryParams() {
         return Arrays.stream(allQueryParams()).collect(Collectors.toMap(
            p -> p.split("=")[0], p -> p.split("=")[1]
         ));
@@ -73,31 +72,4 @@ public class HttpExchangeBlinkRequest implements BlinkRequest {
         }
     }
 
-    private class InputStreamReader {
-        private static final int BUFFER_SIZE = 16384;
-
-        private InputStream requestBody;
-
-        public InputStreamReader(InputStream requestBody) {
-            this.requestBody = requestBody;
-        }
-
-        public String toString() {
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-
-            int nRead;
-            byte[] data = new byte[BUFFER_SIZE];
-
-            try {
-                while ((nRead = requestBody.read(data, 0, data.length)) != -1) {
-                    buffer.write(data, 0, nRead);
-                }
-                buffer.flush();
-                return buffer.toString("UTF-8");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return "";
-        }
-    }
 }
