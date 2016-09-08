@@ -1,6 +1,7 @@
 # blink-java
 Simplified http server, made primarily for using in tests
-It also doesn't have any dependencies other than those that come with Oracle's Jdk 
+It also doesn't have any dependencies other than those that come with Oracle's Jdk
+It's inspired by Spark and Sinatra 
 
 ## Artifactory 
 This package is available at https://bintray.com/rockem/maven/blink-java
@@ -35,14 +36,14 @@ new BlinkServer(1234) {{
 ### Request
 ```java
 req.body()						// request body
-req.param(String)				// Query parameter
-req.pathParam(String)			// Path parameter
+req.param("name")				// Query parameter
+req.pathParam("name")			// Path parameter
 req.uri()						// Request uri
-req.header(String)				// header value 
+req.header("name")				// header value 
 ```
 ### Response
 ```java
-res.status(int)					// set retrun status code
-res.header(String, String)		// Set header 
-res.type(String)				// Set content type
+res.status(201)					// set retrun status code
+res.header("name", "value")		// Set header 
+res.type("type")				// Set content type
 ```
