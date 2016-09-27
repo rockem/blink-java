@@ -7,6 +7,7 @@ import org.rockm.blink.io.InputStreamReader;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -64,6 +65,19 @@ public class HttpExchangeBlinkRequest implements BlinkRequest {
         validateHeaderExists(name);
         return httpExchange.getRequestHeaders().get(name).stream()
                 .reduce((t, u) -> t + "," + u).get();
+    }
+
+    @Override
+    public String cookie(String name) {
+        validateCookiesExists(name);
+        String[] collect = httpExchange.getRequestHeaders().get("Set-Cookie").get(0).split(";");
+        return Arrays.stream(collect).collect(Collectors.toMap(x -> x.split("=")[0], x -> x.split("=")[1])).get(name);
+    }
+
+    private void validateCookiesExists(String name) {
+        if(httpExchange.getRequestHeaders().get("Set-Cookie") == null || !httpExchange.getRequestHeaders().get("Set-Cookie").get(0).contains(name)){
+            throw new CookieNotFoundException("Cookie: [" + name + "] does not exist in request");
+        }
     }
 
     private void validateHeaderExists(String name) {

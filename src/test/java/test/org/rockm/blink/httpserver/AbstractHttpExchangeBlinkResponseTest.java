@@ -2,6 +2,7 @@ package test.org.rockm.blink.httpserver;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
+import org.apache.http.cookie.Cookie;
 import org.junit.Before;
 import org.junit.Test;
 import org.rockm.blink.BlinkResponse;
@@ -9,6 +10,11 @@ import org.rockm.blink.httpserver.HttpExchangeBlinkResponse;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.HttpCookie;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;

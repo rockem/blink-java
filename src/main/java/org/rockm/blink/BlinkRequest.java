@@ -41,4 +41,18 @@ public interface BlinkRequest {
             super(message);
         }
     }
+
+    /**
+     *  Retrieve cookie values
+     * @param name
+     * @return
+     */
+    String cookie(String name);
+
+    class CookieNotFoundException extends BlinkException {
+
+        public CookieNotFoundException(String message) {
+            super(message);
+        }
+    }
 }

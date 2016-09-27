@@ -67,4 +67,20 @@ public class HttpExchangeBlinkRequestTest {
         assertThat(request.param("type"), is("cool"));
     }
 
+    @Test
+    public void shouldRetrieveCookieByName() throws Exception {
+        headers.put("Set-Cookie", Arrays.asList("kuku=popo;crazy=cookie_value_for_crazy"));
+        assertThat(request().cookie("crazy"), is("cookie_value_for_crazy"));
+    }
+
+    @Test(expected = BlinkRequest.CookieNotFoundException.class)
+    public void shouldThrowCookieNotFoundExceptionWhenEmptyHeader(){
+        request().cookie("cookie_value_not_found");
+    }
+
+    @Test(expected = BlinkRequest.CookieNotFoundException.class)
+    public void shouldThrowCookieNotFoundExceptionWhenKeyNotFound(){
+        headers.put("Set-Cookie", Arrays.asList("cookie_key_not_addressed=cookie_value"));
+        request().cookie("cookie_key_not_found");
+    }
 }

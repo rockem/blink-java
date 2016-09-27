@@ -20,4 +20,11 @@ public interface BlinkResponse {
      * @param contentType
      */
     void type(String contentType);
+
+    /**
+     * Add a response cookie
+     * @param name
+     * @param value
+     */
+    void cookie(String name, String value);
 }

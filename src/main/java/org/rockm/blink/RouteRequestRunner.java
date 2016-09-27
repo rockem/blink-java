@@ -68,5 +68,10 @@ public class RouteRequestRunner {
         public String header(String name) {
             return decoratedRequest.header(name);
         }
+
+        @Override
+        public String cookie(String name) {
+            return null;
+        }
     }
 }
