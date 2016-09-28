@@ -1,8 +1,10 @@
 package org.rockm.blink;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -71,7 +73,8 @@ public class RouteRequestRunner {
 
         @Override
         public String cookie(String name) {
-            return null;
+            String[] collect = decoratedRequest.header("Set-Cookie").split(";");
+            return Arrays.stream(collect).collect(Collectors.toMap(x -> x.split("=")[0], x -> x.split("=")[1])).get(name);
         }
     }
 }

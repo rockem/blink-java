@@ -78,9 +78,9 @@ public class HttpExchangeBlinkRequestTest {
         request().cookie("cookie_value_not_found");
     }
 
-    @Test(expected = BlinkRequest.CookieNotFoundException.class)
-    public void shouldThrowCookieNotFoundExceptionWhenKeyNotFound(){
+    @Test
+    public void shouldReturnNullWhenCookieNotFound(){
         headers.put("Set-Cookie", Arrays.asList("cookie_key_not_addressed=cookie_value"));
-        request().cookie("cookie_key_not_found");
+        assertNull(request().cookie("cookie_key_not_found"));
     }
 }

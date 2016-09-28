@@ -75,7 +75,7 @@ public class HttpExchangeBlinkRequest implements BlinkRequest {
     }
 
     private void validateCookiesExists(String name) {
-        if(httpExchange.getRequestHeaders().get("Set-Cookie") == null || !httpExchange.getRequestHeaders().get("Set-Cookie").get(0).contains(name)){
+        if(httpExchange.getRequestHeaders().get("Set-Cookie") == null){
             throw new CookieNotFoundException("Cookie: [" + name + "] does not exist in request");
         }
     }
