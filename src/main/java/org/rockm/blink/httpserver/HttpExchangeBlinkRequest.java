@@ -69,15 +69,15 @@ public class HttpExchangeBlinkRequest implements BlinkRequest {
 
     @Override
     public String cookie(String name) {
-        validateCookiesExists(name);
-        String[] collect = httpExchange.getRequestHeaders().get("Set-Cookie").get(0).split(";");
-        return Arrays.stream(collect).collect(Collectors.toMap(x -> x.split("=")[0], x -> x.split("=")[1])).get(name);
+        if(validateCookiesExists(name)){
+            String[] collect = httpExchange.getRequestHeaders().get("Set-Cookie").get(0).split(";");
+            return Arrays.stream(collect).collect(Collectors.toMap(x -> x.split("=")[0], x -> x.split("=")[1])).get(name);
+        }
+        return null;
     }
 
-    private void validateCookiesExists(String name) {
-        if(httpExchange.getRequestHeaders().get("Set-Cookie") == null){
-            throw new CookieNotFoundException("Cookie: [" + name + "] does not exist in request");
-        }
+    private boolean validateCookiesExists(String name) {
+        return httpExchange.getRequestHeaders().get("Set-Cookie") != null;
     }
 
     private void validateHeaderExists(String name) {
