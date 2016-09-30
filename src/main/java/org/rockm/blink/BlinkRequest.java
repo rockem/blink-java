@@ -41,4 +41,12 @@ public interface BlinkRequest {
             super(message);
         }
     }
+
+    /**
+     *  Retrieve a specific cookie value
+     * @param name of cookie
+     * @return cookie's value
+     */
+    String cookie(String name);
+
 }

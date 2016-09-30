@@ -7,6 +7,7 @@ import org.rockm.blink.io.MessageConverter;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.HttpCookie;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.Map;
 public class HttpExchangeBlinkResponse implements BlinkResponse {
     public static final String CONTENT_TYPE = "Content-Type";
     public static final int DEFAULT_STATUS = 200;
+    public static final String COOKIE = "Set-Cookie";
 
     private Object body = "";
     private int status = DEFAULT_STATUS;
@@ -39,7 +41,7 @@ public class HttpExchangeBlinkResponse implements BlinkResponse {
     }
 
     private void setDefaultContentType(Headers httpHeaders) {
-        if(defaultContentType != null) {
+        if (defaultContentType != null) {
             httpHeaders.put(CONTENT_TYPE, Collections.singletonList(defaultContentType));
         }
     }
@@ -69,6 +71,16 @@ public class HttpExchangeBlinkResponse implements BlinkResponse {
     @Override
     public void type(String contentType) {
         headers.put(CONTENT_TYPE, contentType);
+    }
+
+    @Override
+    public void cookie(String name, String value) {
+        String cookieContent = name + "=" + value;
+        headers.put(COOKIE, headers.containsKey(COOKIE) ? appendCookie(cookieContent) : cookieContent);
+    }
+
+    private String appendCookie(String cookieContent) {
+        return headers.get(COOKIE) + ";" + cookieContent;
     }
 
 }

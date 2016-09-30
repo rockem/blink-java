@@ -73,6 +73,21 @@ public class HttpExchangeBlinkResponseTest extends AbstractHttpExchangeBlinkResp
     }
 
     @Test
+    public void shouldAddCookieToResponse() throws IOException {
+        blinkResponse.cookie("myCookie", "zabo");
+        apply();
+        assertThat(headers.get("Set-Cookie"), is(Arrays.asList("myCookie=zabo")));
+    }
+
+    @Test
+    public void shouldAddNumberOfCookiesToResponse() throws IOException {
+        blinkResponse.cookie("myCookie", "zabo");
+        blinkResponse.cookie("mySecondCookie", "kuku");
+        apply();
+        assertThat(headers.get("Set-Cookie"), is(Arrays.asList("myCookie=zabo;mySecondCookie=kuku")));
+    }
+
+    @Test
     public void shouldSetContentTypeHeader() throws Exception {
         blinkResponse.type("application/json");
         apply();
