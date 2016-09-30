@@ -73,8 +73,7 @@ public class RouteRequestRunner {
 
         @Override
         public String cookie(String name) {
-            String[] collect = decoratedRequest.header("Set-Cookie").split(";");
-            return Arrays.stream(collect).collect(Collectors.toMap(x -> x.split("=")[0], x -> x.split("=")[1])).get(name);
+            return decoratedRequest.cookie(name);
         }
     }
 }
