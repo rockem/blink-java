@@ -1,22 +1,17 @@
 package org.rockm.blink;
 
-import com.sun.net.httpserver.HttpServer;
+import org.rockm.blink.httpserver.JavaHttpServer;
 import org.rockm.blink.httpserver.MultiMethodHttpHandler;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 
 public class BlinkServer {
 
-    private static final int NUM_OF_SECS_WAIT_FOR_STOP = 1;
-
-    private HttpServer httpServer;
-    private final int port;
-    private volatile boolean running = false;
+    private final Server server;
     private final MultiMethodHttpHandler httpHandler = new MultiMethodHttpHandler();
 
     public BlinkServer(int port) {
-        this.port = port;
+        this.server = new JavaHttpServer(port, httpHandler);
     }
 
     public void get(String path, RequestHandler rh) throws IOException {
@@ -24,21 +19,8 @@ public class BlinkServer {
     }
 
     private void registerRoute(String path, Method method, RequestHandler rh) throws IOException {
-        startIfNeeded();
+        server.startIfNeeded();
         httpHandler.addHandler(path, method, rh);
-    }
-
-    private void startIfNeeded() throws IOException {
-        if (!running) {
-            running = true;
-            createHttpServer();
-        }
-    }
-
-    private void createHttpServer() throws IOException {
-        httpServer = HttpServer.create(new InetSocketAddress(port), 0);
-        httpServer.createContext("/", httpHandler);
-        httpServer.start();
     }
 
     public void post(String path, RequestHandler rh) throws IOException {
@@ -54,9 +36,8 @@ public class BlinkServer {
     }
 
     public void stop() {
-        httpServer.stop(NUM_OF_SECS_WAIT_FOR_STOP);
+        server.stop();
     }
-
 
     public void reset() {
         httpHandler.reset();
