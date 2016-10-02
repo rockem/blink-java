@@ -1,17 +1,16 @@
 package org.rockm.blink;
 
 import org.rockm.blink.httpserver.JavaHttpServer;
-import org.rockm.blink.httpserver.MultiMethodHttpHandler;
 
 import java.io.IOException;
 
 public class BlinkServer {
 
     private final Server server;
-    private final MultiMethodHttpHandler httpHandler = new MultiMethodHttpHandler();
+    private final RoutesContainer routesContainer = new RoutesContainer();
 
     public BlinkServer(int port) {
-        this.server = new JavaHttpServer(port, httpHandler);
+        this.server = new JavaHttpServer(port, routesContainer);
     }
 
     public void get(String path, RequestHandler rh) throws IOException {
@@ -20,7 +19,7 @@ public class BlinkServer {
 
     private void registerRoute(String path, Method method, RequestHandler rh) throws IOException {
         server.startIfNeeded();
-        httpHandler.addHandler(path, method, rh);
+        routesContainer.addRoute(new Route(method, path, rh));
     }
 
     public void post(String path, RequestHandler rh) throws IOException {
@@ -40,10 +39,11 @@ public class BlinkServer {
     }
 
     public void reset() {
-        httpHandler.reset();
+        routesContainer.clear();
+        server.setDefaultContentType(null);
     }
 
     public void contentType(String type) {
-        httpHandler.contentType(type);
+        server.setDefaultContentType(type);
     }
 }

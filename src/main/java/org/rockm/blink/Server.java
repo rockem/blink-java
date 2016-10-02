@@ -7,4 +7,6 @@ public interface Server {
     void startIfNeeded() throws IOException;
 
     void stop();
+
+    void setDefaultContentType(String contentType);
 }

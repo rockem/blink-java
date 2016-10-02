@@ -6,6 +6,7 @@ import org.rockm.blink.*;
 
 import java.io.IOException;
 
+@Deprecated
 public class MultiMethodHttpHandler implements HttpHandler {
 
     private final RoutesContainer routesContainer = new RoutesContainer();

@@ -28,12 +28,12 @@ public class HttpExchangeBlinkRequest implements BlinkRequest {
 
     private Map<String, String> getQueryParams() {
         return Arrays.stream(allQueryParams()).collect(Collectors.toMap(
-           p -> p.split("=")[0], p -> p.split("=")[1]
+                p -> p.split("=")[0], p -> p.split("=")[1]
         ));
     }
 
     private String[] allQueryParams() {
-        if(httpExchange.getRequestURI().getQuery() == null) {
+        if (httpExchange.getRequestURI().getQuery() == null) {
             return new String[0];
         }
         return httpExchange.getRequestURI().getQuery().split("&");
@@ -67,21 +67,21 @@ public class HttpExchangeBlinkRequest implements BlinkRequest {
     }
 
     private void validateHeaderExists(String name) {
-        if(httpExchange.getRequestHeaders().get(name) == null) {
+        if (httpExchange.getRequestHeaders().get(name) == null) {
             throw new HeaderNotFoundException("Header: [" + name + "] does not exist in request");
         }
     }
 
     @Override
     public String cookie(String name) {
-        if(cookieHeaderExists(name)){
+        if (cookieHeaderExists()) {
             String[] collect = httpExchange.getRequestHeaders().get("Set-Cookie").get(0).split(";");
             return Arrays.stream(collect).collect(Collectors.toMap(x -> x.split("=")[0], x -> x.split("=")[1])).get(name);
         }
         return null;
     }
 
-    private boolean cookieHeaderExists(String name) {
+    private boolean cookieHeaderExists() {
         return httpExchange.getRequestHeaders().get("Set-Cookie") != null;
     }
 
