@@ -7,7 +7,6 @@ import org.rockm.blink.io.MessageConverter;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.HttpCookie;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

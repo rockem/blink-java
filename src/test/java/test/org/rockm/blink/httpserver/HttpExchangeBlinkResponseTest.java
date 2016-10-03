@@ -1,22 +1,10 @@
 package test.org.rockm.blink.httpserver;
 
-import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpExchange;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InOrder;
-import org.rockm.blink.BlinkResponse;
 import org.rockm.blink.httpserver.HttpExchangeBlinkResponse;
-import test.org.rockm.blink.util.FileUtil;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 
 import static org.hamcrest.core.Is.is;
@@ -24,8 +12,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.rockm.blink.httpserver.HttpExchangeBlinkResponse.CONTENT_TYPE;
-import static test.org.rockm.blink.HttpUtil.fullPath;
-import static test.org.rockm.blink.util.FileUtil.fileInBytes;
 
 public class HttpExchangeBlinkResponseTest extends AbstractHttpExchangeBlinkResponseTest {
 
@@ -101,10 +87,10 @@ public class HttpExchangeBlinkResponseTest extends AbstractHttpExchangeBlinkResp
     }
 
     @Test
-    public void shouldRetrieveAPicture() throws Exception {
-        byte[] imageInBytes = fileInBytes("blink-img.jpg");
-        ((HttpExchangeBlinkResponse)blinkResponse).setBody(imageInBytes);
+    public void shouldRetrieveByteArray() throws Exception {
+        byte[] bytes = new byte[] {3, 2, 45, 23, 67, 12};
+        ((HttpExchangeBlinkResponse)blinkResponse).setBody(bytes);
         apply();
-        assertThat(responseOutputStream.toByteArray(), is(imageInBytes));
+        assertThat(responseOutputStream.toByteArray(), is(bytes));
     }
 }

@@ -2,6 +2,7 @@ package org.rockm.blink.httpserver;
 
 import com.sun.net.httpserver.HttpExchange;
 import org.rockm.blink.BlinkRequest;
+import org.rockm.blink.QueryParamsExtractor;
 import org.rockm.blink.io.InputStreamReader;
 
 import java.io.InputStream;
@@ -19,24 +20,11 @@ public class HttpExchangeBlinkRequest implements BlinkRequest {
     public HttpExchangeBlinkRequest(HttpExchange httpExchange) {
         this.httpExchange = httpExchange;
         body = getAsString(httpExchange.getRequestBody());
-        queryParams = getQueryParams();
+        queryParams = new QueryParamsExtractor(httpExchange.getRequestURI().getQuery()).toMap();
     }
 
     private String getAsString(InputStream requestBody) {
         return new InputStreamReader(requestBody).readAsString();
-    }
-
-    private Map<String, String> getQueryParams() {
-        return Arrays.stream(allQueryParams()).collect(Collectors.toMap(
-                p -> p.split("=")[0], p -> p.split("=")[1]
-        ));
-    }
-
-    private String[] allQueryParams() {
-        if (httpExchange.getRequestURI().getQuery() == null) {
-            return new String[0];
-        }
-        return httpExchange.getRequestURI().getQuery().split("&");
     }
 
     @Override
