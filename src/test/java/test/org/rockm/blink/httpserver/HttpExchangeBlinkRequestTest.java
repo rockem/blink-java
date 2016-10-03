@@ -69,7 +69,7 @@ public class HttpExchangeBlinkRequestTest {
 
     @Test
     public void shouldRetrieveCookieByName() throws Exception {
-        headers.put("Set-Cookie", Arrays.asList("kuku=popo;crazy=cookie_value_for_crazy"));
+        headers.put("Cookie", Arrays.asList("kuku=popo;crazy=cookie_value_for_crazy"));
         assertThat(request().cookie("crazy"), is("cookie_value_for_crazy"));
     }
 

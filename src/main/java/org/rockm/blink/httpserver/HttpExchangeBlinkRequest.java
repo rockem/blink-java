@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 
 public class HttpExchangeBlinkRequest implements BlinkRequest {
 
+    private static final String COOKIE_HEADER = "Cookie";
+
     private final HttpExchange httpExchange;
     private final String body;
     private final Map<String, String> queryParams;
@@ -63,14 +65,14 @@ public class HttpExchangeBlinkRequest implements BlinkRequest {
     @Override
     public String cookie(String name) {
         if (cookieHeaderExists()) {
-            String[] collect = httpExchange.getRequestHeaders().get("Set-Cookie").get(0).split(";");
+            String[] collect = httpExchange.getRequestHeaders().get(COOKIE_HEADER).get(0).split(";");
             return Arrays.stream(collect).collect(Collectors.toMap(x -> x.split("=")[0], x -> x.split("=")[1])).get(name);
         }
         return null;
     }
 
     private boolean cookieHeaderExists() {
-        return httpExchange.getRequestHeaders().get("Set-Cookie") != null;
+        return httpExchange.getRequestHeaders().get(COOKIE_HEADER) != null;
     }
 
 }
