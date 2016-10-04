@@ -20,14 +20,20 @@ public class RouteRequestRunner {
     public Object run(BlinkRequest request, BlinkResponse response) {
         Object responseBody;
         try {
-            String path = request.uri().getPath();
-            validateRoute(path);
-            responseBody = route.getHandler().handleRequest(
-                    new PathParamsBlinkRequest(request, route.getParamsFor(path)),
-                    response);
+            responseBody = handleRequest(request, response);
         } catch (Exception e) {
             responseBody = new ExceptionHandler().handle(e, request, response);
         }
+        return responseBody;
+    }
+
+    private Object handleRequest(BlinkRequest request, BlinkResponse response) {
+        Object responseBody;
+        String path = request.uri().getPath();
+        validateRoute(path);
+        responseBody = route.getHandler().handleRequest(
+                new PathParamsBlinkRequest(request, route.getParamsFor(path)),
+                response);
         return responseBody;
     }
 

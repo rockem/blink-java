@@ -13,8 +13,8 @@ import java.util.Map;
 
 public class HttpExchangeBlinkResponse implements BlinkResponse {
     public static final String CONTENT_TYPE = "Content-Type";
-    public static final int DEFAULT_STATUS = 200;
     public static final String COOKIE = "Set-Cookie";
+    public static final int DEFAULT_STATUS = 200;
 
     private Object body = "";
     private int status = DEFAULT_STATUS;
