@@ -3,6 +3,9 @@ package org.rockm.blink;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toMap;
 
 public class Route {
     private static final String PATH_PARAM_PLACEHOLDERS_REGEX = "\\{([A-Za-z][A-Za-z0-9]*)\\}";
@@ -36,6 +39,15 @@ public class Route {
         this.paramKeys = extract(PATH_PARAM_PLACEHOLDERS_REGEX, route);
     }
 
+    private List<String> extract(String regex, String input) {
+        Matcher v = Pattern.compile(regex).matcher(input);
+        List<String> values = new ArrayList<>();
+        while (v.find() && v.groupCount() > 0) {
+            IntStream.range(0, v.groupCount()).boxed().forEach(i -> values.add(v.group( i +1)));
+        }
+        return values;
+    }
+
     private String createRegexFor(String route) {
         String regexPath = route.replaceAll(PATH_PARAM_ID_REGEX, PATH_PARAM_REGEX);
         return regexPath.replaceAll("/", "\\\\/");
@@ -49,20 +61,7 @@ public class Route {
 
     public Map<String, String> getParamsFor(String path) {
         List<String> values = extract(routeRegex, path);
-        Map<String, String> params = new HashMap<>();
-        for (int i = 0; i < values.size(); i++) {
-            params.put(paramKeys.get(i), values.get(i));
-        }
-        return params;
-    }
-
-    private List<String> extract(String regex, String input) {
-        Matcher v = Pattern.compile(regex).matcher(input);
-        List<String> values = new ArrayList<>();
-        while (v.find() && v.groupCount() > 0) {
-            values.add(v.group(1));
-        }
-        return values;
+        return IntStream.range(0,values.size()).boxed().collect(toMap(paramKeys::get, values::get));
     }
 
     public RequestHandler getHandler() {
