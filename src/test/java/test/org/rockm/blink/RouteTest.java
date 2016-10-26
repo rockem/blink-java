@@ -16,6 +16,13 @@ public class RouteTest {
     }
 
     @Test
+    public void shouldRetrieveMoreThanOnePathParamValue() throws Exception {
+        Route route = new Route(Method.DELETE, "/hello/{id}/{name}", null);
+        assertThat(route.getParamsFor("/hello/543/kuku").get("id"), is("543"));
+        assertThat(route.getParamsFor("/hello/543/kuku").get("name"), is("kuku"));
+    }
+
+    @Test
     public void shouldAllowMoreCharsInPathParams() throws Exception {
         Route route = new Route(Method.GET, "/hello/{id}", null);
         String paramWithAllAllowedChars = "a5-._~Lulu";
