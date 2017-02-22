@@ -5,6 +5,7 @@ import org.rockm.blink.Method;
 import org.rockm.blink.Route;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
 public class RouteTest {
@@ -27,5 +28,12 @@ public class RouteTest {
         Route route = new Route(Method.GET, "/hello/{id}", null);
         String paramWithAllAllowedChars = "a5-._~Lulu";
         assertThat(route.getParamsFor("/hello/" + paramWithAllAllowedChars).get("id"), is(paramWithAllAllowedChars));
+    }
+
+    @Test
+    public void shouldMatchExactPath() throws Exception {
+        Route route = new Route(Method.GET, "/hello", null);
+        assertThat(route.isMatchedPath("/hello"), is(true));
+        assertThat(route.isMatchedPath("/hello123"), is(false));
     }
 }

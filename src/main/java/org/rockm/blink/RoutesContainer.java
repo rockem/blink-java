@@ -23,12 +23,7 @@ public class RoutesContainer {
     }
 
     private Set<Route> getRoutesFor(Method method) {
-        Set<Route> routes = methodToRoutes.get(method);
-        if(routes == null) {
-            routes = new HashSet<>();
-            methodToRoutes.put(method, routes);
-        }
-        return routes;
+        return methodToRoutes.computeIfAbsent(method, k -> new HashSet<>());
     }
 
     public void clear() {

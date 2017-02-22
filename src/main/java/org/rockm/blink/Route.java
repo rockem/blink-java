@@ -10,26 +10,13 @@ import static java.util.stream.Collectors.toMap;
 public class Route {
     private static final String PATH_PARAM_PLACEHOLDERS_REGEX = "\\{([A-Za-z][A-Za-z0-9]*)\\}";
     private static final String PATH_PARAM_REGEX = "([A-Za-z\\-~\\.\\_0-9]+)";
-    private static final String PATH_PARAM_ID_REGEX = "\\{[A-Za-z][A-Za-z0-9]*\\}";
+    private static final String PATH_PARAM_ID_REGEX = "\\{[A-Za-z][A-Za-z0-9]*}";
+    public static final String WORD_BOUNDARY = "\\b";
     private final String route;
     private final String routeRegex;
     private final Method method;
     private final RequestHandler handler;
     private final List<String> paramKeys;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Route)) return false;
-        Route route1 = (Route) o;
-        return Objects.equals(route, route1.route) &&
-                method == route1.method;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(route, method);
-    }
 
     public Route(Method method, String path, RequestHandler handler) {
         this.method = method;
@@ -39,6 +26,11 @@ public class Route {
         this.paramKeys = extract(PATH_PARAM_PLACEHOLDERS_REGEX, route);
     }
 
+    private String createRegexFor(String route) {
+        String regexPath = route.replaceAll(PATH_PARAM_ID_REGEX, PATH_PARAM_REGEX);
+        return regexPath.replaceAll("/", "\\\\/") + WORD_BOUNDARY;
+    }
+
     private List<String> extract(String regex, String input) {
         Matcher v = Pattern.compile(regex).matcher(input);
         List<String> values = new ArrayList<>();
@@ -46,11 +38,6 @@ public class Route {
             IntStream.range(0, v.groupCount()).boxed().forEach(i -> values.add(v.group( i +1)));
         }
         return values;
-    }
-
-    private String createRegexFor(String route) {
-        String regexPath = route.replaceAll(PATH_PARAM_ID_REGEX, PATH_PARAM_REGEX);
-        return regexPath.replaceAll("/", "\\\\/");
     }
 
     public boolean isMatchedPath(String path) {
@@ -70,5 +57,19 @@ public class Route {
 
     public Method getMethod() {
         return method;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Route)) return false;
+        Route route1 = (Route) o;
+        return Objects.equals(route, route1.route) &&
+                method == route1.method;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(route, method);
     }
 }
