@@ -11,7 +11,7 @@ public class Route {
     private static final String PATH_PARAM_PLACEHOLDERS_REGEX = "\\{([A-Za-z][A-Za-z0-9]*)\\}";
     private static final String PATH_PARAM_REGEX = "([A-Za-z\\-~\\.\\_0-9]+)";
     private static final String PATH_PARAM_ID_REGEX = "\\{[A-Za-z][A-Za-z0-9]*}";
-    public static final String WORD_BOUNDARY = "\\b";
+    public static final String END_OF_LINE = "$";
     private final String route;
     private final String routeRegex;
     private final Method method;
@@ -28,7 +28,7 @@ public class Route {
 
     private String createRegexFor(String route) {
         String regexPath = route.replaceAll(PATH_PARAM_ID_REGEX, PATH_PARAM_REGEX);
-        return regexPath.replaceAll("/", "\\\\/") + WORD_BOUNDARY;
+        return regexPath.replaceAll("/", "\\\\/") + END_OF_LINE;
     }
 
     private List<String> extract(String regex, String input) {

@@ -1,4 +1,4 @@
-# blink-java
+# blink-java [![CircleCI](https://circleci.com/gh/rockem/blink-java.svg?style=svg)](https://circleci.com/gh/rockem/blink-java)
 Simplified http server, made primarily for using in tests
 It also doesn't have any dependencies other than those that come with Oracle's Jdk
 It's inspired by Spark and Sinatra 

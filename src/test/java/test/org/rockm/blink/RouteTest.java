@@ -36,4 +36,11 @@ public class RouteTest {
         assertThat(route.isMatchedPath("/hello"), is(true));
         assertThat(route.isMatchedPath("/hello123"), is(false));
     }
+
+    @Test
+    public void shouldNotMatchPathWithMoreElements() throws Exception {
+        Route route = new Route(Method.GET, "/hello", null);
+        assertThat(route.isMatchedPath("/hello/1/"), is(false));
+
+    }
 }
