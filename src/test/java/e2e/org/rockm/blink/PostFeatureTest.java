@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
 
+import static e2e.org.rockm.blink.support.HttpUtil.createHttpPost;
 import static e2e.org.rockm.blink.support.HttpUtil.fullPath;
 import static e2e.org.rockm.blink.support.HttpUtil.getBodyFrom;
 import static org.hamcrest.core.Is.is;
@@ -22,12 +23,6 @@ public class PostFeatureTest extends BlinkServerTest {
         blinkServer.post("/hello", (req, res) -> req.body());
         HttpResponse response = httpClient.execute(createHttpPost("/hello", new StringEntity("Kuku")));
         assertThat(getBodyFrom(response), is("Kuku"));
-    }
-
-    private HttpPost createHttpPost(String path, HttpEntity entity) throws UnsupportedEncodingException {
-        HttpPost request = new HttpPost(fullPath(path));
-        request.setEntity(entity);
-        return request;
     }
 
     @Test

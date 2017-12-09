@@ -18,6 +18,7 @@ public class JavaHttpServer implements Server {
     private HttpServer httpServer;
     private volatile boolean running = false;
     private String defaultContentType;
+    private BlinkRequest lastRequest;
 
 
     public JavaHttpServer(int port, RoutesContainer routesContainer) {
@@ -47,6 +48,11 @@ public class JavaHttpServer implements Server {
         this.defaultContentType = contentType;
     }
 
+    @Override
+    public BlinkRequest getLastRequest() {
+        return lastRequest;
+    }
+
     private class MultiMethodHttpHandler implements HttpHandler {
 
         @Override
@@ -57,6 +63,7 @@ public class JavaHttpServer implements Server {
             HttpExchangeBlinkResponse response = new HttpExchangeBlinkResponse(defaultContentType);
             HttpExchangeBlinkRequest request = new HttpExchangeBlinkRequest(httpExchange);
             response.setBody(new RouteRequestRunner(route).run(request, response));
+            lastRequest = request;
             response.apply(httpExchange);
         }
 

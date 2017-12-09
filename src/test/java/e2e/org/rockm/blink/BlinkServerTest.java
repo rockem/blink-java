@@ -7,7 +7,7 @@ import org.rockm.blink.BlinkServer;
 
 import static e2e.org.rockm.blink.support.HttpUtil.PORT;
 
-public class BlinkServerTest {
+public abstract class BlinkServerTest {
 
     protected static BlinkServer blinkServer;
     protected final HttpClient httpClient = HttpClientBuilder.create().build();

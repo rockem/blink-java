@@ -35,17 +35,17 @@ new BlinkServer(1234) {{
 ```
 ### Request
 ```java
-req.body()						// request body
-req.param("name")				// Query parameter
-req.pathParam("name")			// Path parameter
-req.uri()						// Request uri
-req.header("name")				// header value
-req.cookie("name")				// cookie value
+req.body()                  // request body
+req.param("name")           // Query parameter
+req.pathParam("name")       // Path parameter
+req.uri()                   // Request uri
+req.header("name")          // header value
+req.cookie("name")          // cookie value
 ```
 ### Response
 ```java
-res.status(201)					// set retrun status code
-res.header("name", "value")		// Set header 
-res.type("type")				// Set content type
-res.cookie("name", "value")		// Add/Update cookie
+res.status(201)                 // set retrun status code
+res.header("name", "value")     // Set header 
+res.type("type")                // Set content type
+res.cookie("name", "value")     // Add/Update cookie
 ```

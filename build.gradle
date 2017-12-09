@@ -1,11 +1,20 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
 
+plugins {
+    id "com.jfrog.bintray" version "1.7.3"
+}
 
 apply plugin: 'java'
 apply plugin: 'groovy'
-apply plugin: 'maven'
+//apply plugin: 'maven'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+group = 'org.rockem'
 version = 0.5
 
 repositories {
@@ -33,25 +42,26 @@ dependencies {
 
 }
 
-task createPom << {
-    pom {
-        project {
-            groupId 'org.rockem'
-            artifactId 'blink-http'
-            version '0.1.0'
-
-            inceptionYear '2016'
-            licenses {
-                license {
-                    name 'The Apache Software License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution 'repo'
-                }
-            }
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    configurations = ['archives']
+    publish = true
+    pkg {
+        repo = 'maven'
+        name = 'blink-java'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/rockem/blink-java.git'
+        version {
+            name = '0.5.1'
+            desc = ''
+            released  = new Date()
+            vcsTag = '0.5.1'
         }
-    }.writeTo("pom.xml")
+    }
 }
 
+
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.13'
+    gradleVersion = '2.4'
 }

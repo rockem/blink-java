@@ -3,11 +3,12 @@ package org.rockm.blink;
 import org.rockm.blink.httpserver.JavaHttpServer;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class BlinkServer {
 
     private final Server server;
-    private final RoutesContainer routesContainer = new RoutesContainer();
+    private final RoutesContainer routesContainer = new RoutesContainer(new HashMap<>());
 
     public BlinkServer(int port) {
         this.server = new JavaHttpServer(port, routesContainer);
@@ -45,5 +46,9 @@ public class BlinkServer {
 
     public void contentType(String type) {
         server.setDefaultContentType(type);
+    }
+
+    public BlinkRequest lastRequest() {
+        return server.getLastRequest();
     }
 }

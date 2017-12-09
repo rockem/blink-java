@@ -1,12 +1,15 @@
 package org.rockm.blink;
 
-import com.sun.net.httpserver.HttpExchange;
-
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RoutesContainer {
 
-    private Map<Method, Set<Route>> methodToRoutes = new HashMap<>();
+    private final Map<Method, Set<Route>> methodToRoutes;
+
+    public RoutesContainer(Map<Method, Set<Route>> methodToRoutes) {
+        this.methodToRoutes = Collections.unmodifiableMap(methodToRoutes);
+    }
 
     public Route getRouteFor(String method, String path) {
         Optional<Set<Route>> routes = Optional.ofNullable(methodToRoutes.get(Method.valueOf(method)));
@@ -16,10 +19,13 @@ public class RoutesContainer {
         return route.orElse(null);
     }
 
-    public void addRoute(Route route) {
-        Set<Route> routes = getRoutesFor(route.getMethod());
+    public RoutesContainer addRoute(Route route) {
+        Map<Method, Set<Route>> c = methodToRoutes.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> new HashSet<>(e.getValue())));
+        Set<Route> routes = c.computeIfAbsent(route.getMethod(), k -> new HashSet<>());
         routes.remove(route);
         routes.add(route);
+        return new RoutesContainer(c);
     }
 
     private Set<Route> getRoutesFor(Method method) {

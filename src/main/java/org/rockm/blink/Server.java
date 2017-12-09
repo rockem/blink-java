@@ -9,4 +9,6 @@ public interface Server {
     void stop();
 
     void setDefaultContentType(String contentType);
+
+    BlinkRequest getLastRequest();
 }

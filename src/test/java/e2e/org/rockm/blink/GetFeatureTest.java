@@ -21,7 +21,7 @@ public class GetFeatureTest extends BlinkServerTest {
     }
 
     @Test
-    public void shouldGetWithPathParameter() throws Exception {
+    public void shouldGetWithQueryParameter() throws Exception {
         blinkServer.get("/hello", (req, res) -> "Hello " + req.param("name"));
         HttpResponse response = httpClient.execute(new HttpGet(fullPath("/hello?name=Popo")));
         assertThat(getBodyFrom(response), is("Hello Popo"));
