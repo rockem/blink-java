@@ -28,11 +28,7 @@ public class RoutesContainer {
         return new RoutesContainer(c);
     }
 
-    private Set<Route> getRoutesFor(Method method) {
-        return methodToRoutes.computeIfAbsent(method, k -> new HashSet<>());
-    }
-
-    public void clear() {
-        methodToRoutes.clear();
+    public static RoutesContainer empty() {
+        return new RoutesContainer(new HashMap<>());
     }
 }

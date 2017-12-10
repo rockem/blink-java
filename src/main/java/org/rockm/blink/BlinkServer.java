@@ -8,31 +8,25 @@ import java.util.HashMap;
 public class BlinkServer {
 
     private final Server server;
-    private final RoutesContainer routesContainer = new RoutesContainer(new HashMap<>());
 
     public BlinkServer(int port) {
-        this.server = new JavaHttpServer(port, routesContainer);
+        this.server = new JavaHttpServer(port);
     }
 
     public void get(String path, RequestHandler rh) throws IOException {
-        registerRoute(path, Method.GET, rh);
-    }
-
-    private void registerRoute(String path, Method method, RequestHandler rh) throws IOException {
-        server.startIfNeeded();
-        routesContainer.addRoute(new Route(method, path, rh));
+        server.addRoute(new Route(Method.GET, path, rh));
     }
 
     public void post(String path, RequestHandler rh) throws IOException {
-        registerRoute(path, Method.POST, rh);
+        server.addRoute(new Route(Method.POST, path, rh));
     }
 
     public void delete(String path, RequestHandler rh) throws IOException {
-        registerRoute(path, Method.DELETE, rh);
+        server.addRoute(new Route(Method.DELETE, path, rh));
     }
 
     public void put(String path, RequestHandler rh) throws IOException {
-        registerRoute(path, Method.PUT, rh);
+        server.addRoute(new Route(Method.PUT, path, rh));
     }
 
     public void stop() {
@@ -40,8 +34,7 @@ public class BlinkServer {
     }
 
     public void reset() {
-        routesContainer.clear();
-        server.setDefaultContentType(null);
+        server.reset();
     }
 
     public void contentType(String type) {

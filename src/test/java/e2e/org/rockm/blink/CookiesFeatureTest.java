@@ -22,6 +22,5 @@ public class CookiesFeatureTest extends BlinkServerTest {
         get.addHeader("Cookie", COOKIE_NAME + "=kuku");
         HttpResponse response = httpClient.execute(get);
         Assert.assertThat(response.getFirstHeader("Set-Cookie").getValue(), is(COOKIE_NAME + "=kuku"));
-
     }
 }

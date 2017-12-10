@@ -2,6 +2,7 @@ package test.org.rockm.blink.httpserver;
 
 import com.sun.net.httpserver.HttpExchange;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.rockm.blink.BlinkRequest;
 import org.rockm.blink.BlinkResponse;
@@ -36,6 +37,7 @@ public class MultiMethodHttpHandlerTest {
         when(httpExchange.getRequestBody()).thenReturn(new ByteArrayInputStream("".getBytes()));
     }
 
+    @Ignore
     @Test
     public void shouldRetrievePathParam() throws Exception {
         handler.addHandler(PATH_WITH_PARAM, Method.DELETE, requestHandler);

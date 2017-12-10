@@ -9,7 +9,7 @@ import java.io.IOException;
 @Deprecated
 public class MultiMethodHttpHandler implements HttpHandler {
 
-    private final RoutesContainer routesContainer = new RoutesContainer();
+    private RoutesContainer routesContainer; // = new RoutesContainer();
     private String defaultContentType;
 
     @Override
@@ -28,7 +28,7 @@ public class MultiMethodHttpHandler implements HttpHandler {
     }
 
     public void reset() {
-        routesContainer.clear();
+        //routesContainer.clear();
         defaultContentType = null;
     }
 

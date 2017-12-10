@@ -5,6 +5,8 @@ import org.rockm.blink.Method;
 import org.rockm.blink.Route;
 import org.rockm.blink.RoutesContainer;
 
+import java.util.HashMap;
+
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertNull;
@@ -14,7 +16,7 @@ public class RoutesContainerTest {
 
     @Test
     public void shouldRetrieveNullWhenNoRoutes() throws Exception {
-        assertNull(new RoutesContainer().getRouteFor("GET", "http://stam"));
+        assertNull(new RoutesContainer(new HashMap<>()).getRouteFor("GET", "http://stam"));
     }
 
 }

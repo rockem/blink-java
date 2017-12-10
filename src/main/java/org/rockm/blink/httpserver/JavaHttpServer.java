@@ -13,7 +13,7 @@ public class JavaHttpServer implements Server {
     private static final int NUM_OF_SECS_WAIT_FOR_STOP = 1;
 
     private final int port;
-    private final RoutesContainer routesContainer;
+    private RoutesContainer routesContainer = RoutesContainer.empty();
 
     private HttpServer httpServer;
     private volatile boolean running = false;
@@ -21,12 +21,31 @@ public class JavaHttpServer implements Server {
     private BlinkRequest lastRequest;
 
 
-    public JavaHttpServer(int port, RoutesContainer routesContainer) {
+    public JavaHttpServer(int port) {
         this.port = port;
-        this.routesContainer = routesContainer;
     }
 
-    public void startIfNeeded() throws IOException {
+    public void stop() {
+        httpServer.stop(NUM_OF_SECS_WAIT_FOR_STOP);
+    }
+
+    @Override
+    public void setDefaultContentType(String contentType) {
+        defaultContentType = contentType;
+    }
+
+    @Override
+    public BlinkRequest getLastRequest() {
+        return lastRequest;
+    }
+
+    @Override
+    public void addRoute(Route route) throws IOException {
+        startIfNeeded();
+        routesContainer = routesContainer.addRoute(route);
+    }
+
+    private void startIfNeeded() throws IOException {
         if (!running) {
             running = true;
             createHttpServerFor();
@@ -39,18 +58,10 @@ public class JavaHttpServer implements Server {
         httpServer.start();
     }
 
-    public void stop() {
-        httpServer.stop(NUM_OF_SECS_WAIT_FOR_STOP);
-    }
-
     @Override
-    public void setDefaultContentType(String contentType) {
-        this.defaultContentType = contentType;
-    }
-
-    @Override
-    public BlinkRequest getLastRequest() {
-        return lastRequest;
+    public void reset() {
+        routesContainer = RoutesContainer.empty();
+        defaultContentType = null;
     }
 
     private class MultiMethodHttpHandler implements HttpHandler {
@@ -61,7 +72,7 @@ public class JavaHttpServer implements Server {
                     httpExchange.getRequestMethod(),
                     httpExchange.getRequestURI().getPath());
             HttpExchangeBlinkResponse response = new HttpExchangeBlinkResponse(defaultContentType);
-            HttpExchangeBlinkRequest request = new HttpExchangeBlinkRequest(httpExchange);
+            BlinkRequest request = new HttpExchangeBlinkRequest(httpExchange);
             response.setBody(new RouteRequestRunner(route).run(request, response));
             lastRequest = request;
             response.apply(httpExchange);
