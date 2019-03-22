@@ -1,10 +1,36 @@
 # blink-java [![CircleCI](https://circleci.com/gh/rockem/blink-java.svg?style=svg)](https://circleci.com/gh/rockem/blink-java)
-Simplified http server, made primarily for using in tests
-It also doesn't have any dependencies other than those that come with Oracle's Jdk
-It's inspired by Spark and Sinatra 
+blink is simplified http server, made primarily for using in tests.
+It has no dependencies other than those that come with Oracle's Jdk
+and it's inspired by Spark and Sinatra frameworks
 
-## Installation 
-This package is available at https://bintray.com/rockem/maven/blink-java
+## Dependency
+### Maven
+```xml
+<repositories>
+    <repository>
+      <id>jcenter</id>
+      <url>https://jcenter.bintray.com/</url>
+    </repository>
+</repositories>
+```
+```xml
+<dependency>
+    <groupId>org.rockem</groupId>
+    <artifactId>blink-java</artifactId>
+    <version>0.5.3</version>
+</dependency>
+```
+### Gradle
+```groovy
+repositories {
+    jcenter()
+}
+```
+```groovy
+dependencies {
+    compile 'org.rockem:blink-java:0.5.3'
+}
+```
 
 ## Usage
 ### Hello World

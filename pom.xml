@@ -4,9 +4,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.rockem</groupId>
-    <artifactId>blink-http</artifactId>
-    <version>0.5.2</version>
+    <artifactId>blink-java</artifactId>
+    <version>0.5.3</version>
     <inceptionYear>2016</inceptionYear>
+    <packaging>jar</packaging>
+    <name>blink-java</name>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -115,6 +117,7 @@
     <distributionManagement>
         <repository>
             <id>blink-java</id>
+            <name>blink-java</name>
             <url>https://api.bintray.com/maven/rockem/maven/blink-java/;publish=1</url>
         </repository>
     </distributionManagement>
