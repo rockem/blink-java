@@ -77,3 +77,4 @@ res.header("name", "value")     // Set header
 res.type("type")                // Set content type
 res.cookie("name", "value")     // Add/Update cookie
 ```
+.
