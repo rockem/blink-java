@@ -1,9 +1,9 @@
 # blink-java 
 [![CircleCI](https://circleci.com/gh/rockem/blink-java.svg?style=svg)](https://circleci.com/gh/rockem/blink-java)
 
-blink is simplified http server, made primarily for using in tests.
+blink is a simplified http server, made primarily for using in tests.
 It has no dependencies other than those that come with Oracle's Jdk
-and it's inspired by Spark and Sinatra frameworks
+and it's inspired by Spark and Sinatra frameworks.
 
 ## Dependency
 ### Maven
@@ -77,4 +77,3 @@ res.header("name", "value")     // Set header
 res.type("type")                // Set content type
 res.cookie("name", "value")     // Add/Update cookie
 ```
-.
